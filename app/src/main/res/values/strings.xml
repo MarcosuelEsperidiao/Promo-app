@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LowPrice</string>
+    <string name="lowprice">LowPrice</string>
+    <string name="welcome">Welcome</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="ask_creat">Ainda nao é cadastrado?</string>
+    <string name="compartilhar_promo_o">Compartilhar Promoção</string>
+</resources>
