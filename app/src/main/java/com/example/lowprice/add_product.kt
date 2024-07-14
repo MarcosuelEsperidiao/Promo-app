@@ -24,11 +24,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.lowprice.app.router_backend.Product
+import com.example.lowprice.app.router_backend.ProductService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
+import android.util.Base64
 
 class add_product : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -84,8 +92,6 @@ class add_product : AppCompatActivity() {
 
         sendButton.setOnClickListener {
             salvarInformacoes()
-            val intent = Intent(this, layout_user::class.java)
-            startActivity(intent)
         }
 
         val textWatcher = object : TextWatcher {
@@ -178,7 +184,7 @@ class add_product : AppCompatActivity() {
         val locarioText = editTextLocario.text.toString()
         val priceText = editTextPrice.text.toString()
 
-        val sharedPreferences = getSharedPreferences("ProductInfo", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("ProductInfo", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
         // Recuperar o contador de produtos e incrementar
@@ -192,11 +198,40 @@ class add_product : AppCompatActivity() {
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         val byteArray = stream.toByteArray()
-        editor.putString("image_$productCount", byteArray.joinToString(","))
+        val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        editor.putString("image_$productCount", imageString)
 
         editor.putInt("product_count", productCount + 1)
 
         editor.apply()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://your-server-ip-address:5000")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(ProductService::class.java)
+
+        val product = Product(locationText, locarioText, priceText.toFloat(), imageString)
+
+        service.addProduct(product).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(
+                        this@add_product,
+                        "Product added successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(this@add_product, "Failed to add product", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@add_product, "Error: " + t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun checkAllFields() {
@@ -209,9 +244,7 @@ class add_product : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
@@ -223,4 +256,5 @@ class add_product : AppCompatActivity() {
         }
     }
 }
+
 
