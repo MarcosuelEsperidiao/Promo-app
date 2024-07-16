@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
+
 // Defina uma interface Retrofit para suas chamadas API
 interface ProductService {
     @POST("/products")

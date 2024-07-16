@@ -1,29 +1,58 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+import sqlite3
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-db = SQLAlchemy(app)
 
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    location = db.Column(db.String(100), nullable=False)
-    locario = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    image = db.Column(db.String(1000), nullable=True)  # Assuming storing image paths or URLs
+def init_db():
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Product (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            location TEXT NOT NULL,
+            locario TEXT NOT NULL,
+            price REAL NOT NULL,
+            image TEXT
+        )
+        ''')
+        conn.commit()
 
 @app.route('/products', methods=['POST'])
 def add_product():
     data = request.get_json()
-    new_product = Product(
-        location=data['location'],
-        locario=data['locario'],
-        price=data['price'],
-        image=data['image']  # You may need to handle image uploads properly
-    )
-    db.session.add(new_product)
-    db.session.commit()
+    if not data:
+        return jsonify({'message': 'No JSON data received'}), 400
+
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+        INSERT INTO Product (location, locario, price, image) 
+        VALUES (?, ?, ?, ?)
+        ''', (data.get('location'), data.get('locario'), data.get('price'), data.get('image')))
+        conn.commit()
+
     return jsonify({'message': 'Product added successfully'})
 
+@app.route('/products', methods=['GET'])
+def get_products():
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM Product')
+        products = cursor.fetchall()
+
+    product_list = []
+    for product in products:
+        product_dict = {
+            'id': product[0],
+            'location': product[1],
+            'locario': product[2],
+            'price': product[3],
+            'image': product[4]
+        }
+        product_list.append(product_dict)
+
+    return jsonify(product_list)
+
 if __name__ == '__main__':
+    init_db()
     app.run(debug=True)

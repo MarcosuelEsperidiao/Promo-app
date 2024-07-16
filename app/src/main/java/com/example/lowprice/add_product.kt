@@ -2,7 +2,6 @@ package com.example.lowprice
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,6 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -36,7 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
-import android.util.Base64
 
 class add_product : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -103,6 +102,7 @@ class add_product : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         }
 
+
         editTextLocation.addTextChangedListener(textWatcher)
         editTextLocario.addTextChangedListener(textWatcher)
         editTextPrice.addTextChangedListener(textWatcher)
@@ -115,14 +115,20 @@ class add_product : AppCompatActivity() {
 
     private fun abrirCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        } else {
+            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            imageViewPreview.setImageBitmap(imageBitmap)
+            val imageBitmap = data?.extras?.get("data") as Bitmap?
+            imageBitmap?.let {
+                imageViewPreview.setImageBitmap(it)
+            }
         }
     }
 
@@ -206,7 +212,7 @@ class add_product : AppCompatActivity() {
         editor.apply()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://your-server-ip-address:5000")
+            .baseUrl("http://192.168.0.64:5000/")  // Substitua pelo IP do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -240,7 +246,9 @@ class add_product : AppCompatActivity() {
         val isPriceFilled = editTextPrice.text.toString().isNotEmpty()
         val isImageFilled = imageViewPreview.drawable != null
 
-        sendButton.isEnabled = isLocationFilled && isLocarioFilled && isPriceFilled && isImageFilled
+            sendButton.isEnabled = isLocationFilled && isLocarioFilled && isPriceFilled && isImageFilled
+
+
     }
 
     override fun onRequestPermissionsResult(
@@ -256,5 +264,4 @@ class add_product : AppCompatActivity() {
         }
     }
 }
-
 
