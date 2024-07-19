@@ -2,6 +2,7 @@ package com.example.lowprice.app.router_backend
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 
@@ -9,6 +10,10 @@ import retrofit2.http.POST
 interface ProductService {
     @POST("/products")
     fun addProduct(@Body product: Product): Call<Void>
+
+    @GET("/products")
+    fun getProducts(): Call<List<Product>>
+
 }
 
 // Classe de modelo de dados para enviar para o servidor

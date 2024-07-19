@@ -33,6 +33,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
@@ -210,6 +212,14 @@ class add_product : AppCompatActivity() {
         editor.putInt("product_count", productCount + 1)
 
         editor.apply()
+
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.0.64:5000/")  // Substitua pelo IP do seu servidor
