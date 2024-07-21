@@ -208,6 +208,7 @@ class add_product : AppCompatActivity() {
         val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
         editor.putString("image_$productCount", imageString)
 
+
         editor.putInt("product_count", productCount + 1)
 
         editor.apply()
@@ -228,7 +229,8 @@ class add_product : AppCompatActivity() {
 
         val service = retrofit.create(ProductService::class.java)
 
-        val product = Product(locationText, locarioText, priceText.toFloat(), imageString)
+
+        val product = Product(locationText, locarioText, priceText.toFloat(), imageString,)
 
         service.addProduct(product).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

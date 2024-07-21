@@ -2,6 +2,8 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/allerta</item>
+        <item>@font/allerta_stencil</item>
+        <item>@font/amiko</item>
         <item>@font/beth_ellen</item>
     </array>
 </resources>

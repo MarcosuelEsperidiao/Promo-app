@@ -33,6 +33,7 @@
         android:id="@+id/edit_name"
         android:hint="@string/e_mail"
         android:textColorHint="@color/green"
+        android:textAlignment="center"
         android:textSize="15sp"
         android:padding="10dp"
         android:stateListAnimator="@null"
@@ -49,6 +50,7 @@
     <EditText
         android:id="@+id/edit_password"
         android:hint="Senha"
+        android:textAlignment="center"
         android:textColorHint="@color/green"
         android:textSize="15sp"
         android:stateListAnimator="@null"

@@ -23,13 +23,24 @@ def add_product():
     if not data:
         return jsonify({'message': 'No JSON data received'}), 400
 
-    with sqlite3.connect('database.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-        INSERT INTO Product (location, locario, price, image) 
-        VALUES (?, ?, ?, ?)
-        ''', (data.get('location'), data.get('locario'), data.get('price'), data.get('image')))
-        conn.commit()
+    location = data.get('location')
+    locario = data.get('locario')
+    price = data.get('price')
+    image = data.get('image')
+
+    if not all([location, locario, price]):
+        return jsonify({'message': 'Missing required fields'}), 400
+
+    try:
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+            INSERT INTO Product (location, locario, price, image) 
+            VALUES (?, ?, ?, ?)
+            ''', (location, locario, price, image))
+            conn.commit()
+    except sqlite3.Error as e:
+        return jsonify({'message': str(e)}), 500
 
     return jsonify({'message': 'Product added successfully'})
 
@@ -37,7 +48,7 @@ def add_product():
 def get_products():
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Product ORDER BY id DESC')  # Ordenar pelo ID de forma decrescente
+        cursor.execute('SELECT * FROM Product ORDER BY id DESC')
         products = cursor.fetchall()
 
     product_list = []
@@ -63,7 +74,6 @@ def delete_product(product_id):
             return jsonify({'message': 'Product not found'}), 404
 
     return jsonify({'message': 'Product deleted successfully'})
-
 
 if __name__ == '__main__':
     init_db()

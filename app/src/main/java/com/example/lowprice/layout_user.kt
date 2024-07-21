@@ -65,7 +65,7 @@ class layout_user : AppCompatActivity() {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
-                    addProductsToLayout(productList)
+                    addProductsToLayout(productList,)
                     swipeRefreshLayout.isRefreshing = false
                 } else {
                     Toast.makeText(this@layout_user, "Failed to load products", Toast.LENGTH_SHORT)
@@ -87,15 +87,19 @@ class layout_user : AppCompatActivity() {
         for (product in products) {
             try {
                 val productView = layoutInflater.inflate(R.layout.product_item, null)
-
                 val textLocation = productView.findViewById<TextView>(R.id.text_location)
                 val textLocario = productView.findViewById<TextView>(R.id.text_locario)
                 val textPriceDetail = productView.findViewById<TextView>(R.id.text_price_detail)
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
 
+
+
                 textLocation.text = product.location
                 textLocario.text = product.locario
                 textPriceDetail.text = product.price.toString()
+
+
+
 
                 product.image?.let {
                     if (it.isNotEmpty()) {

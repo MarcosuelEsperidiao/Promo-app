@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS Product (
 )
 ''')
 
+# Confirmar a transação
+conn.commit()
+
 # Inserir um registro na tabela Product
 cursor.execute('''
 INSERT INTO Product (location, locario, price, image) 

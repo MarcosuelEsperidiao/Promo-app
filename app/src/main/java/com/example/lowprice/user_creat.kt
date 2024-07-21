@@ -25,7 +25,6 @@ class user_creat : AppCompatActivity() {
 
         // Obter referências para os elementos de interface do usuário
         val nameEditText: EditText = findViewById(R.id.text_name)
-        val emailEditText: EditText = findViewById(R.id.text_email)
         val phoneEditText: EditText = findViewById(R.id.text_phone)
         val passwordEditText: EditText = findViewById(R.id.text_creat_password)
         val createAccountButton: Button = findViewById(R.id.btn_creat_count)
@@ -33,11 +32,10 @@ class user_creat : AppCompatActivity() {
         // Adicionar OnClickListener ao botão "Criar conta"
         createAccountButton.setOnClickListener {
             val name = nameEditText.text.toString().trim()
-            val email = emailEditText.text.toString().trim()
             val phone = phoneEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
+            if (name.isEmpty() || phone.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this, MainActivity::class.java)
