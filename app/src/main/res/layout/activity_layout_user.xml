@@ -29,7 +29,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_below="@id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_below="@id/text_view"
@@ -47,6 +51,7 @@
             <!-- Items will be added dynamically here -->
         </LinearLayout>
     </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <androidx.cardview.widget.CardView

@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.lowprice.app.router_backend.Product
 import com.example.lowprice.app.router_backend.ProductService
 import retrofit2.Call
@@ -21,6 +22,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class layout_user : AppCompatActivity() {
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,6 +41,18 @@ class layout_user : AppCompatActivity() {
             startActivity(intent)
         }
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
+        swipeRefreshLayout.setOnRefreshListener {
+            fetchProducts()
+        }
+
+        // Fetch products initially
+        fetchProducts()
+    }
+
+    private fun fetchProducts() {
+
+
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.0.64:5000/") // Altere para o endereço correto do seu servidor
@@ -51,10 +66,12 @@ class layout_user : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
                     addProductsToLayout(productList)
+                    swipeRefreshLayout.isRefreshing = false
                 } else {
                     Toast.makeText(this@layout_user, "Failed to load products", Toast.LENGTH_SHORT)
                         .show()
                 }
+                swipeRefreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
@@ -65,6 +82,7 @@ class layout_user : AppCompatActivity() {
 
     private fun addProductsToLayout(products: List<Product>) {
         val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
+        productListLayout.removeAllViews()
 
         for (product in products) {
             try {

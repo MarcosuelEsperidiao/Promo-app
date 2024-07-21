@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.play.services.analytics.impl)
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 

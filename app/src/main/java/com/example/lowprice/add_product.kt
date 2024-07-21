@@ -104,7 +104,6 @@ class add_product : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         }
 
-
         editTextLocation.addTextChangedListener(textWatcher)
         editTextLocario.addTextChangedListener(textWatcher)
         editTextPrice.addTextChangedListener(textWatcher)
@@ -224,6 +223,7 @@ class add_product : AppCompatActivity() {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.0.64:5000/")  // Substitua pelo IP do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
             .build()
 
         val service = retrofit.create(ProductService::class.java)
@@ -238,6 +238,9 @@ class add_product : AppCompatActivity() {
                         "Product added successfully",
                         Toast.LENGTH_SHORT
                     ).show()
+                    // Navegar para layout_user
+                    val intent = Intent(this@add_product, layout_user::class.java)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(this@add_product, "Failed to add product", Toast.LENGTH_SHORT)
                         .show()
@@ -256,22 +259,7 @@ class add_product : AppCompatActivity() {
         val isPriceFilled = editTextPrice.text.toString().isNotEmpty()
         val isImageFilled = imageViewPreview.drawable != null
 
-            sendButton.isEnabled = isLocationFilled && isLocarioFilled && isPriceFilled && isImageFilled
-
-
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLastLocation()
-            } else {
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
+        sendButton.isEnabled = isLocationFilled && isLocarioFilled && isPriceFilled && isImageFilled
     }
 }
 
