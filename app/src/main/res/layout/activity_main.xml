@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/edit_name"
-        android:hint="@string/e_mail"
+        android:hint="Telefone"
         android:textColorHint="@color/green"
         android:textAlignment="center"
         android:textSize="15sp"
@@ -40,7 +40,7 @@
         android:elevation="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:inputType="textEmailAddress"
+        android:inputType="number"
         android:layout_marginTop="200dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/rounded_edittext"
@@ -66,22 +66,23 @@
 
     <Button
         android:id="@+id/btn_button"
-        android:text="Login"
-        android:textColor="@color/green"
-        android:stateListAnimator="@null"
-        android:elevation="10dp"
-        android:backgroundTint="#DADADA"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:layout_below="@id/edit_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#DADADA"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:stateListAnimator="@null"
+        android:text="Login"
+        android:textColor="@color/green" />
 
     <TextView
         android:textSize="15sp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="15dp"
         android:textColor="@color/white"
         android:id="@+id/text_txt"

@@ -1,7 +1,7 @@
 import sqlite3
 
 # Conectar ao banco de dados (ou criar se não existir)
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('database1.db')
 cursor = conn.cursor()
 
 # Criar a tabela Product

@@ -3,19 +3,15 @@ import sqlite3
 
 app = Flask(__name__)
 
-def init_db():
-    with sqlite3.connect('database.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS Product (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            location TEXT NOT NULL,
-            locario TEXT NOT NULL,
-            price REAL NOT NULL,
-            image TEXT
-        )
-        ''')
-        conn.commit()
+def get_products_db_connection():
+    conn = sqlite3.connect('database1.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def get_users_db_connection():
+    conn = sqlite3.connect('database2.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 @app.route('/products', methods=['POST'])
 def add_product():
@@ -75,6 +71,92 @@ def delete_product(product_id):
 
     return jsonify({'message': 'Product deleted successfully'})
 
+#################################################
+
+@app.route('/users', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': 'No JSON data received'}), 400
+
+    name = data.get('name')
+    phone = data.get('phone')
+    password = data.get('password')
+
+    if not all([name, phone, password]):
+        return jsonify({'message': 'Missing required fields'}), 400
+
+    try:
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+            INSERT INTO User (name, phone, password) 
+            VALUES (?, ?, ?)
+            ''', (name, phone, password))
+            conn.commit()
+    except sqlite3.IntegrityError:
+        return jsonify({'message': 'Phone number already registered'}), 400
+    except sqlite3.Error as e:
+        return jsonify({'message': str(e)}), 500
+
+    return jsonify({'message': 'User added successfully'})
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM User ORDER BY id DESC')
+        users = cursor.fetchall()
+
+    user_list = []
+    for user in users:
+        user_dict = {
+            'id': user[0],
+            'name': user[1],
+            'phone': user[2],
+            'password': user[3]
+        }
+        user_list.append(user_dict)
+
+    return jsonify(user_list)
+
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM User WHERE id = ?', (user_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'User not found'}), 404
+
+    return jsonify({'message': 'User deleted successfully'})
+
+
+##########################################
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': 'No JSON data received'}), 400
+
+    phone = data.get('phone')
+    password = data.get('password')
+
+    if not all([phone, password]):
+        return jsonify({'message': 'Missing required fields'}), 400
+
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM User WHERE phone = ? AND password = ?', (phone, password))
+        user = cursor.fetchone()
+
+    if user is None:
+        return jsonify({'message': 'Invalid phone or password'}), 401
+
+    return jsonify({'message': 'Login successful'})
+
+
+
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)

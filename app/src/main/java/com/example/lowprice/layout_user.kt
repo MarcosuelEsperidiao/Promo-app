@@ -1,5 +1,6 @@
 package com.example.lowprice
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -24,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class layout_user : AppCompatActivity() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,6 +42,8 @@ class layout_user : AppCompatActivity() {
             val intent = Intent(this, add_product::class.java)
             startActivity(intent)
         }
+
+
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         swipeRefreshLayout.setOnRefreshListener {
@@ -94,9 +98,9 @@ class layout_user : AppCompatActivity() {
 
 
 
-                textLocation.text = product.location
-                textLocario.text = product.locario
-                textPriceDetail.text = product.price.toString()
+                textLocation.text =product.location
+                textLocario.text = "Endereço: ${product.locario}"
+                textPriceDetail.text = "Preço: R$ ${product.price}"
 
 
 
