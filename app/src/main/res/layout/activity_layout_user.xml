@@ -25,19 +25,18 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="15dp"
         android:elevation="20dp"
-        android:background="@drawable/rounded_background"
+        android:src="@drawable/rounded_background"
         android:layout_width="50dp"
         android:layout_height="50dp"/>
 
     <TextView
-        android:id="@+id/text_name"
+        android:id="@+id/t_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/img_perfil"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/amiko"
         android:padding="10dp"
-        android:text="Olá, Marcos!"
         android:textColor="@color/white"
         android:textSize="25sp" />
 
@@ -47,7 +46,7 @@
         android:layout_below="@id/text_prices"
         android:background="@color/black"
         android:layout_width="match_parent"
-        android:layout_height="3dp"/>
+        android:layout_height="1dp"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

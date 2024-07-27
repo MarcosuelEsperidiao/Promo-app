@@ -71,7 +71,7 @@
         android:layout_below="@id/edit_password"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="63dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="#DADADA"
         android:elevation="10dp"
@@ -82,7 +82,7 @@
 
     <TextView
         android:textSize="15sp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="15dp"
         android:textColor="@color/white"
         android:id="@+id/text_txt"

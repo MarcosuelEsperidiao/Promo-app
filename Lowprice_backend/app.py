@@ -120,6 +120,7 @@ def get_users():
 
     return jsonify(user_list)
 
+
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     with sqlite3.connect('database.db') as conn:
@@ -154,7 +155,7 @@ def login_user():
     if user is None:
         return jsonify({'message': 'Invalid phone or password'}), 401
 
-    return jsonify({'message': 'Login successful'})
+    return jsonify({'message': 'Login successful', 'name':user[1]})
 
 
 

@@ -1,5 +1,6 @@
 package com.example.lowprice
 
+import android.app.SharedElementCallback
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -23,10 +24,14 @@ class user_creat : AppCompatActivity() {
 
     private lateinit var userService: UserService
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_user_creat)
+
+
 
         // Configure insets for edge-to-edge layout
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
