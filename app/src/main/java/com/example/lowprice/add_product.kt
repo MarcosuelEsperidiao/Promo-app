@@ -71,6 +71,7 @@ class add_product : AppCompatActivity() {
 
         val imageViewCamera: ImageView = findViewById(R.id.imageViewCamera)
 
+
         imageViewCamera.setOnClickListener {
             abrirCamera()
         }

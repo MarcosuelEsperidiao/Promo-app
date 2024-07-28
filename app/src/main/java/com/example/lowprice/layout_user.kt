@@ -20,19 +20,48 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.ByteArrayOutputStream
 
 class layout_user : AppCompatActivity() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+<<<<<<< Updated upstream
+=======
+    private lateinit var scrollView: ScrollView
+    private lateinit var imgPerfil: ImageView
+
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_PICK = 2
+
+    @SuppressLint("MissingInflatedId")
+>>>>>>> Stashed changes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_layout_user)
 
+<<<<<<< Updated upstream
+=======
+        scrollView = findViewById(R.id.scroll_view)
+        imgPerfil = findViewById(R.id.img_perfil)
+
+        val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val userName = sharedPreferences.getString("userName", "")
+
+        val textViewName: TextView = findViewById(R.id.t_name)
+        textViewName.text =  "Olá, ${userName ?: "usuário"}"
+
+>>>>>>> Stashed changes
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val profileUser: ImageView = findViewById(R.id.profile_user_)
+        profileUser.setOnClickListener {
+            val intent = Intent(this, perfil_user::class.java)
+            startActivity(intent)
         }
 
         val iconAddCircle: ImageView = findViewById(R.id.icon_add_circle)
@@ -46,10 +75,100 @@ class layout_user : AppCompatActivity() {
             fetchProducts()
         }
 
+<<<<<<< Updated upstream
+=======
+        imgPerfil.setOnClickListener {
+            showImagePickerDialog()
+        }
+
+        // Carregar imagem de perfil salva
+        loadProfileImage()
+
+>>>>>>> Stashed changes
         // Fetch products initially
         fetchProducts()
     }
 
+<<<<<<< Updated upstream
+=======
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Tirar Foto", "Escolher da Galeria")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Escolha uma opção")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> openCamera()
+                    1 -> openGallery()
+                }
+            }
+            .show()
+    }
+
+    private fun openCamera() {
+        val takePictureIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    private fun openGallery() {
+        val pickPhoto = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(pickPhoto, REQUEST_IMAGE_PICK)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    val imageBitmap = data?.extras?.get("data") as Bitmap
+                    saveProfileImage(imageBitmap)
+                    Glide.with(this)
+                        .load(imageBitmap)
+                        .transform(CircleCrop())
+                        .into(imgPerfil)
+                }
+                REQUEST_IMAGE_PICK -> {
+                    val selectedImage = data?.data
+                    selectedImage?.let {
+                        val inputStream = contentResolver.openInputStream(it)
+                        val imageBitmap = BitmapFactory.decodeStream(inputStream)
+                        saveProfileImage(imageBitmap)
+                        Glide.with(this)
+                            .load(selectedImage)
+                            .transform(CircleCrop())
+                            .into(imgPerfil)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun saveProfileImage(bitmap: Bitmap) {
+        val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        val encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        editor.putString("profileImage", encodedImage)
+        editor.apply()
+    }
+
+    private fun loadProfileImage() {
+        val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val encodedImage = sharedPreferences.getString("profileImage", null)
+        encodedImage?.let {
+            val byteArray = Base64.decode(it, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            Glide.with(this)
+                .load(bitmap)
+                .transform(CircleCrop())
+                .into(imgPerfil)
+        }
+    }
+
+>>>>>>> Stashed changes
     private fun fetchProducts() {
 
 
@@ -114,3 +233,4 @@ class layout_user : AppCompatActivity() {
         }
     }
 }
+
