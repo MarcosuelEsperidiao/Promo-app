@@ -21,6 +21,5 @@ data class Product(
     val location: String,
     val locario: String,
     val price: Float,
-    val image: String?,  // Se você está enviando um caminho de imagem, pode ser uma string
-
+    val image: String?  // Se você está enviando um caminho de imagem, pode ser uma string
 )
