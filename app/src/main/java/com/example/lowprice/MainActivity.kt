@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show()
             } else {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("http://192.168.0.64:5000/")
+                    .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 

@@ -50,7 +50,7 @@ class user_creat : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.64:5000/")  // Substitua pelo IP do seu servidor
+            .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/")  // Substitua pelo IP do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()

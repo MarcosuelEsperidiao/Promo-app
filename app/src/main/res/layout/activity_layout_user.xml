@@ -105,6 +105,7 @@
                 android:src="@drawable/baseline_add_circle_outline_24" />
 
             <ImageView
+                android:id="@+id/profile_user_"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

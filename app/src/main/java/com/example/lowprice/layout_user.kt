@@ -2,7 +2,6 @@ package com.example.lowprice
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -18,32 +17,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.lowprice.app.router_backend.Product
 import com.example.lowprice.app.router_backend.ProductService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.ByteArrayOutputStream
 
 class layout_user : AppCompatActivity() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
     private lateinit var scrollView: ScrollView
     private lateinit var imgPerfil: ImageView
 
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_PICK = 2
 
-
     @SuppressLint("MissingInflatedId")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_layout_user)
+
 
         scrollView = findViewById(R.id.scroll_view)
         imgPerfil = findViewById(R.id.img_perfil)
@@ -52,7 +54,7 @@ class layout_user : AppCompatActivity() {
         val userName = sharedPreferences.getString("userName", "")
 
         val textViewName: TextView = findViewById(R.id.t_name)
-        textViewName.text = userName
+        textViewName.text =  "Olá, ${userName ?: "usuário"}"
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -61,15 +63,16 @@ class layout_user : AppCompatActivity() {
             insets
         }
 
+        val profileUser: ImageView = findViewById(R.id.profile_user_)
+        profileUser.setOnClickListener {
+            val intent = Intent(this, perfil_user::class.java)
+            startActivity(intent)
+        }
+
         val iconAddCircle: ImageView = findViewById(R.id.icon_add_circle)
         iconAddCircle.setOnClickListener {
             val intent = Intent(this, add_product::class.java)
             startActivity(intent)
-        }
-
-        val iconHome: ImageView = findViewById(R.id.icon_home)
-        iconHome.setOnClickListener {
-            scrollView.smoothScrollTo(0, 0)
         }
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
@@ -77,15 +80,18 @@ class layout_user : AppCompatActivity() {
             fetchProducts()
         }
 
+
         imgPerfil.setOnClickListener {
             showImagePickerDialog()
         }
 
+        // Carregar imagem de perfil salva
+        loadProfileImage()
+
+
         // Fetch products initially
         fetchProducts()
     }
-
-
 
 
     private fun showImagePickerDialog() {
@@ -119,6 +125,7 @@ class layout_user : AppCompatActivity() {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
+                    saveProfileImage(imageBitmap)
                     Glide.with(this)
                         .load(imageBitmap)
                         .transform(CircleCrop())
@@ -126,19 +133,50 @@ class layout_user : AppCompatActivity() {
                 }
                 REQUEST_IMAGE_PICK -> {
                     val selectedImage = data?.data
-                    Glide.with(this)
-                        .load(selectedImage)
-                        .transform(CircleCrop())
-                        .into(imgPerfil)
+                    selectedImage?.let {
+                        val inputStream = contentResolver.openInputStream(it)
+                        val imageBitmap = BitmapFactory.decodeStream(inputStream)
+                        saveProfileImage(imageBitmap)
+                        Glide.with(this)
+                            .load(selectedImage)
+                            .transform(CircleCrop())
+                            .into(imgPerfil)
+                    }
                 }
             }
         }
     }
 
+    private fun saveProfileImage(bitmap: Bitmap) {
+        val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        val encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        editor.putString("profileImage", encodedImage)
+        editor.apply()
+    }
+
+    private fun loadProfileImage() {
+        val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val encodedImage = sharedPreferences.getString("profileImage", null)
+        encodedImage?.let {
+            val byteArray = Base64.decode(it, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            Glide.with(this)
+                .load(bitmap)
+                .transform(CircleCrop())
+                .into(imgPerfil)
+        }
+    }
+
     private fun fetchProducts() {
+
+
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.64:5000/") // Altere para o endereço correto do seu servidor
+            .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/") // Altere para o endereço correto do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -153,13 +191,12 @@ class layout_user : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@layout_user, "Failed to load products", Toast.LENGTH_SHORT)
                         .show()
-                    swipeRefreshLayout.isRefreshing = false
                 }
+                swipeRefreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
                 Toast.makeText(this@layout_user, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                swipeRefreshLayout.isRefreshing = false
             }
         })
     }
@@ -171,14 +208,15 @@ class layout_user : AppCompatActivity() {
         for (product in products) {
             try {
                 val productView = layoutInflater.inflate(R.layout.product_item, null)
+
                 val textLocation = productView.findViewById<TextView>(R.id.text_location)
                 val textLocario = productView.findViewById<TextView>(R.id.text_locario)
                 val textPriceDetail = productView.findViewById<TextView>(R.id.text_price_detail)
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
 
                 textLocation.text = product.location
-                textLocario.text = "Endereço: ${product.locario}"
-                textPriceDetail.text = "Preço: R$ ${product.price}"
+                textLocario.text = product.locario
+                textPriceDetail.text = product.price.toString()
 
                 product.image?.let {
                     if (it.isNotEmpty()) {

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+
 app = Flask(__name__)
 
 def get_products_db_connection():
@@ -150,19 +151,18 @@ def login_user():
 
     if not all([phone, password]):
         return jsonify({'message': 'Missing required fields'}), 400
-    
 
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM User WHERE phone = ? AND password = ?', (phone, password))
+        cursor.execute('SELECT * FROM User WHERE phone = ?', (phone,))
         user = cursor.fetchone()
 
-    if user is None or not check_password_hash(user['password'], password):
+    if user is None or not check_password_hash(user[3], password):
         return jsonify({'message': 'Invalid phone or password'}), 401
 
-    return jsonify({'message': 'Login successful', 'name':user[1]})
+    return jsonify({'message': 'Login successful', 'name': user[1]})
 
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(port=5000, debug=True)
