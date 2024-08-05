@@ -55,6 +55,8 @@ class add_product : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_product)
 
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         editTextLocario = findViewById(R.id.text_locario)
         imageViewPreview = findViewById(R.id.imageViewPreview)
@@ -222,7 +224,7 @@ class add_product : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/")  // Substitua pelo IP do seu servidor
+            .baseUrl("http://144.22.225.3:5000/")  // Substitua pelo IP do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()

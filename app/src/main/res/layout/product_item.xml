@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="vertical">
 
 
     <TextView
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/text_location"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
@@ -20,6 +20,7 @@
     <TextView
         android:id="@+id/text_locario"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:layout_below="@id/text_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
     <TextView
         android:id="@+id/text_price_detail"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_locario"

@@ -15,6 +15,13 @@
         android:layout_width="60dp"
         android:layout_height="60dp"/>
 
+    <ImageView
+        android:id="@+id/img_fullscreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
+
+
     <TextView
         android:id="@+id/name_profile"
         android:textSize="20sp"

@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -67,6 +69,42 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Adicionar TextWatcher ao EditText de telefone para formatação
+        editPhone.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val hint = editPhone.hint // Armazenar o hint original
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating) return
+
+                val raw = s.toString().replace("[^\\d]".toRegex(), "")
+                val formatted = formatPhoneNumber(raw)
+
+                isUpdating = true
+                s?.replace(0, s.length, formatted)
+                isUpdating = false
+
+                if (s.isNullOrEmpty()) {
+                    editPhone.hint = hint // Restaurar o hint quando o campo estiver vazio
+                }
+            }
+
+            private fun formatPhoneNumber(s: String): String {
+                val length = s.length
+                return when {
+                    length == 0 -> ""
+                    length <= 2 -> "($s"
+                    length <= 7 -> "(${s.substring(0, 2)}) ${s.substring(2)}"
+                    length <= 11 -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${s.substring(3, 7)}-${s.substring(7)}"
+                    else -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${s.substring(3, 7)}-${s.substring(7, 11)}"
+                }
+            }
+        })
+
         btnLogin.setOnClickListener {
             val phone = editPhone.text.toString().trim()
             val password = editPassword.text.toString().trim()
@@ -77,9 +115,13 @@ class MainActivity : AppCompatActivity() {
 
             if (phone.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show()
+            } else if (phone.length < 16) { // Número de telefone formatado deve ter 16 caracteres
+                Toast.makeText(this, "O número de telefone deve ter no mínimo 11 dígitos", Toast.LENGTH_SHORT).show()
+            } else if (password.length != 6) { // Senha deve ter no mínimo 6 dígitos
+                Toast.makeText(this, "Dados inválidos", Toast.LENGTH_SHORT).show()
             } else {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/")
+                    .baseUrl("http://144.22.225.3:5000/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 

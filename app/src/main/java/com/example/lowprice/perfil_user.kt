@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
@@ -21,6 +22,8 @@ class perfil_user : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_perfil_user)
 
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val userName = sharedPreferences.getString("userName", "")
 
@@ -29,6 +32,7 @@ class perfil_user : AppCompatActivity() {
 
         val imgProfile: ImageView = findViewById(R.id.photo_profile)
         loadProfileImage(imgProfile)
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -47,6 +51,16 @@ class perfil_user : AppCompatActivity() {
         logoutProfile.setOnClickListener { logoutClickListener() }
         logoutText.setOnClickListener { logoutClickListener() }
         rightProfileLogout.setOnClickListener { logoutClickListener() }
+
+        val termsTextView: TextView = findViewById(R.id.form_text_profile)
+        val profileImageView: ImageView = findViewById(R.id.form_profile)
+
+        val showTermsListener = {
+            showTermsAndConditions()
+        }
+
+        termsTextView.setOnClickListener { showTermsListener() }
+        profileImageView.setOnClickListener { showTermsListener() }
     }
 
     private fun loadProfileImage(imageView: ImageView) {
@@ -62,6 +76,8 @@ class perfil_user : AppCompatActivity() {
                 .transform(CircleCrop())
                 .into(imageView)
         }
+
+
     }
 
     private fun showLogoutConfirmationDialog() {
@@ -83,4 +99,15 @@ class perfil_user : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
+
+    private fun showTermsAndConditions() {
+        val terms = getString(R.string.terms_and_conditions)
+
+        AlertDialog.Builder(this)
+            .setTitle("Termos e Condições")
+            .setMessage(terms)
+            .setPositiveButton("Fechar", null)
+            .show()
+    }
+
 }

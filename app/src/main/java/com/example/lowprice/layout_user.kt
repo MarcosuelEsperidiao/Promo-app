@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -46,6 +47,8 @@ class layout_user : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_layout_user)
 
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+
 
         scrollView = findViewById(R.id.scroll_view)
         imgPerfil = findViewById(R.id.img_perfil)
@@ -73,6 +76,12 @@ class layout_user : AppCompatActivity() {
         iconAddCircle.setOnClickListener {
             val intent = Intent(this, add_product::class.java)
             startActivity(intent)
+
+        }
+
+        val iconHome: ImageView = findViewById(R.id.icon_home)
+        iconHome.setOnClickListener {
+            scrollView.smoothScrollTo(0, 0)
         }
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
@@ -176,7 +185,7 @@ class layout_user : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://9c3d-2804-14c-bf3a-97fe-00-1001.ngrok-free.app/") // Altere para o endereço correto do seu servidor
+            .baseUrl("http://144.22.225.3:5000/") // Altere para o endereço correto do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -215,8 +224,8 @@ class layout_user : AppCompatActivity() {
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
 
                 textLocation.text = product.location
-                textLocario.text = product.locario
-                textPriceDetail.text = product.price.toString()
+                textLocario.text = "Endereço: ${product.locario}"
+                textPriceDetail.text = "Preço: R$ ${product.price}"
 
                 product.image?.let {
                     if (it.isNotEmpty()) {

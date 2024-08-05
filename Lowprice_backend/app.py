@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 app = Flask(__name__)
 
 def get_products_db_connection():
@@ -56,6 +57,8 @@ def get_products():
             'locario': product[2],
             'price': product[3],
             'image': product[4]
+
+            
         }
         product_list.append(product_dict)
 
