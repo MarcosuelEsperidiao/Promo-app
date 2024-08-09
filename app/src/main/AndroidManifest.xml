@@ -43,7 +43,7 @@
             android:name=".perfil_user"
             android:exported="false" />
         <activity
-            android:name=".add_product"
+            android:name=".AddProductActivity"
             android:exported="false" />
         <activity
             android:name=".layout_user"

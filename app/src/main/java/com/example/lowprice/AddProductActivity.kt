@@ -24,8 +24,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.lowprice.app.router_backend.Product
-import com.example.lowprice.app.router_backend.ProductService
+import com.example.lowprice.data.ProductService
+import com.example.lowprice.data.model.Product
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
@@ -39,7 +39,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
 
-class add_product : AppCompatActivity() {
+class AddProductActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private val REQUEST_IMAGE_CAPTURE = 0
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -55,7 +55,12 @@ class add_product : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_product)
 
-        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+        getWindow().setNavigationBarColor(
+            ContextCompat.getColor(
+                this,
+                R.color.navigation_bar_color
+            )
+        );
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         editTextLocario = findViewById(R.id.text_locario)
@@ -232,27 +237,27 @@ class add_product : AppCompatActivity() {
         val service = retrofit.create(ProductService::class.java)
 
 
-        val product = Product(locationText, locarioText, priceText.toFloat(), imageString,)
+        val product = Product(locationText, locarioText, priceText.toFloat(), imageString)
 
         service.addProduct(product).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Toast.makeText(
-                        this@add_product,
+                        this@AddProductActivity,
                         "Product added successfully",
                         Toast.LENGTH_SHORT
                     ).show()
                     // Navegar para layout_user
-                    val intent = Intent(this@add_product, layout_user::class.java)
+                    val intent = Intent(this@AddProductActivity, layout_user::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this@add_product, "Failed to add product", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@AddProductActivity, "Failed to add product", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(this@add_product, "Error: " + t.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AddProductActivity, "Error: " + t.message, Toast.LENGTH_SHORT).show()
             }
         })
     }

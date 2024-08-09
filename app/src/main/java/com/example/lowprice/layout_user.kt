@@ -20,8 +20,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.example.lowprice.app.router_backend.Product
-import com.example.lowprice.app.router_backend.ProductService
+import com.example.lowprice.data.ProductService
+import com.example.lowprice.data.model.Product
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +40,7 @@ class layout_user : AppCompatActivity() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_PICK = 2
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SetTextI18n")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class layout_user : AppCompatActivity() {
 
         val iconAddCircle: ImageView = findViewById(R.id.icon_add_circle)
         iconAddCircle.setOnClickListener {
-            val intent = Intent(this, add_product::class.java)
+            val intent = Intent(this, AddProductActivity::class.java)
             startActivity(intent)
 
         }

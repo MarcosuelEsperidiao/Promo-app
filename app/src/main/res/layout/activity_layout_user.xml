@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="@string/lowprice"
         android:textColor="@color/black"
         android:textSize="30sp" />
@@ -132,6 +132,7 @@
                 android:id="@+id/txt_add_product"
                 android:text="ADICONAR PRODUTO"
                 android:textAlignment="center"
+                android:layout_marginStart="10dp"
                 android:textSize="10sp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
