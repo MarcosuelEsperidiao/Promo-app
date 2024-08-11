@@ -83,10 +83,11 @@
 
     <ImageView
         android:id="@+id/imageViewPreview"
-        android:layout_width="480dp"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:scaleType="fitCenter"
         android:layout_below="@id/price"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginTop="2dp" />
 
     <ImageView
         android:id="@+id/imageViewCamera"

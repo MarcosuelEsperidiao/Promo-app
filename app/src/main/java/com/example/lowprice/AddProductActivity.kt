@@ -9,7 +9,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,6 +24,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.lowprice.data.ProductService
@@ -36,18 +39,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddProductActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
-    private val REQUEST_IMAGE_CAPTURE = 0
+    private val REQUEST_IMAGE_CAPTURE = 2
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var editTextLocario: EditText
     private lateinit var imageViewPreview: ImageView
     private lateinit var editTextLocation: EditText
     private lateinit var editTextPrice: EditText
     private lateinit var sendButton: Button
+    private var imageUri: Uri? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,9 +128,19 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     private fun abrirCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            // Cria um arquivo temporário para armazenar a imagem
+            val photoFile: File? = createImageFile()
+            photoFile?.let {
+                imageUri = FileProvider.getUriForFile(
+                    this,
+                    "com.example.lowprice.fileprovider",
+                    it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
         } else {
             Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
         }
@@ -133,11 +149,20 @@ class AddProductActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap?
-            imageBitmap?.let {
-                imageViewPreview.setImageBitmap(it)
+            imageUri?.let {
+                imageViewPreview.setImageURI(it)
             }
         }
+    }
+
+    private fun createImageFile(): File? {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        )
     }
 
     private fun getLastLocation() {
@@ -210,7 +235,7 @@ class AddProductActivity : AppCompatActivity() {
 
         val bitmap = (imageViewPreview.drawable as BitmapDrawable).bitmap
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, stream)
         val byteArray = stream.toByteArray()
         val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
         editor.putString("image_$productCount", imageString)
