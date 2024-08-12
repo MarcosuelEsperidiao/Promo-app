@@ -1,4 +1,4 @@
-package com.example.lowprice
+package com.example.lowprice.ViewModel
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -27,8 +27,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.lowprice.data.ProductService
-import com.example.lowprice.data.model.Product
+import com.example.lowprice.Model.ApiService.AddProduct_Api
+import com.example.lowprice.Model.Product_Add
+import com.example.lowprice.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
@@ -259,12 +260,12 @@ class AddProductActivity : AppCompatActivity() {
             .client(httpClient)
             .build()
 
-        val service = retrofit.create(ProductService::class.java)
+        val service = retrofit.create(AddProduct_Api::class.java)
 
 
-        val product = Product(locationText, locarioText, priceText.toFloat(), imageString)
+        val productAdd = Product_Add(locationText, locarioText, priceText.toFloat(), imageString)
 
-        service.addProduct(product).enqueue(object : Callback<Void> {
+        service.addProduct(productAdd).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Toast.makeText(
@@ -273,7 +274,7 @@ class AddProductActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     // Navegar para layout_user
-                    val intent = Intent(this@AddProductActivity, layout_user::class.java)
+                    val intent = Intent(this@AddProductActivity, LayoutUserActivity::class.java)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this@AddProductActivity, "Failed to add product", Toast.LENGTH_SHORT)

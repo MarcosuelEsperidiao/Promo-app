@@ -1,5 +1,6 @@
-package com.example.lowprice.data.model
-data class Product(
+package com.example.lowprice.Model
+
+data class Product_Add(
     val location: String,
     val locario: String,
     val price: Float,

@@ -41,19 +41,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".perfil_user"
+            android:name=".ViewModel.PerfilUserActivity"
             android:exported="false" />
         <activity
-            android:name=".AddProductActivity"
+            android:name=".ViewModel.AddProductActivity"
             android:exported="false" />
         <activity
-            android:name=".layout_user"
+            android:name=".ViewModel.LayoutUserActivity"
             android:exported="false" />
         <activity
-            android:name=".user_creat"
+            android:name=".Model.UserCreatActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ViewModel.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

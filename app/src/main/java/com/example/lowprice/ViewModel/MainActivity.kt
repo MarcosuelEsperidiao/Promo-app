@@ -1,9 +1,8 @@
-package com.example.lowprice
+package com.example.lowprice.ViewModel
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.content.SharedPreferences
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -17,9 +16,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.lowprice.app.router_backend.LoginRequest
-import com.example.lowprice.app.router_backend.LoginResponse
-import com.example.lowprice.app.router_backend.Userlogin
+import com.example.lowprice.Model.ApiService.LoginCheck_Api
+import com.example.lowprice.Model.LoginRequest
+import com.example.lowprice.Model.LoginResponse
+import com.example.lowprice.R
+import com.example.lowprice.Model.UserCreatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         val isAuthenticated = sharedPreferences.getBoolean("isAuthenticated", false)
         if (isAuthenticated) {
-            val intent = Intent(this, layout_user::class.java)
+            val intent = Intent(this, LayoutUserActivity::class.java)
             startActivity(intent)
             finish()
             return
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             if (vibrator.hasVibrator()) {
                 vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
             }
-            val intent = Intent(this, user_creat::class.java)
+            val intent = Intent(this, UserCreatActivity::class.java)
             startActivity(intent)
         }
 
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
-                val service = retrofit.create(Userlogin::class.java)
+                val service = retrofit.create(LoginCheck_Api::class.java)
                 val loginRequest = LoginRequest(phone, password)
 
                 service.loginUser(loginRequest).enqueue(object : Callback<LoginResponse> {
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                             if (loginResponse != null) {
                                 sharedPreferences.edit().putBoolean("isAuthenticated", true).apply()
                                 sharedPreferences.edit().putString("userName", loginResponse.name).apply()
-                                val intent = Intent(this@MainActivity, layout_user::class.java)
+                                val intent = Intent(this@MainActivity, LayoutUserActivity::class.java)
                                 startActivity(intent)
                                 finish()
                             }

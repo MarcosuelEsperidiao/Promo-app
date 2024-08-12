@@ -1,4 +1,4 @@
-package com.example.lowprice
+package com.example.lowprice.ViewModel
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -20,8 +20,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.example.lowprice.data.ProductService
-import com.example.lowprice.data.model.Product
+import com.example.lowprice.Model.ApiService.AddProduct_Api
+import com.example.lowprice.Model.Product_Add
+import com.example.lowprice.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,7 +31,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.ByteArrayOutputStream
 
-class layout_user : AppCompatActivity() {
+class LayoutUserActivity : AppCompatActivity() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -68,7 +69,7 @@ class layout_user : AppCompatActivity() {
 
         val profileUser: ImageView = findViewById(R.id.profile_user_)
         profileUser.setOnClickListener {
-            val intent = Intent(this, perfil_user::class.java)
+            val intent = Intent(this, PerfilUserActivity::class.java)
             startActivity(intent)
         }
 
@@ -189,32 +190,32 @@ class layout_user : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service = retrofit.create(ProductService::class.java)
+        val service = retrofit.create(AddProduct_Api::class.java)
 
-        service.getProducts().enqueue(object : Callback<List<Product>> {
-            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
+        service.getProducts().enqueue(object : Callback<List<Product_Add>> {
+            override fun onResponse(call: Call<List<Product_Add>>, response: Response<List<Product_Add>>) {
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
                     addProductsToLayout(productList)
                     swipeRefreshLayout.isRefreshing = false
                 } else {
-                    Toast.makeText(this@layout_user, "Failed to load products", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@LayoutUserActivity, "Failed to load products", Toast.LENGTH_SHORT)
                         .show()
                 }
                 swipeRefreshLayout.isRefreshing = false
             }
 
-            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
-                Toast.makeText(this@layout_user, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<List<Product_Add>>, t: Throwable) {
+                Toast.makeText(this@LayoutUserActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun addProductsToLayout(products: List<Product>) {
+    private fun addProductsToLayout(productAdds: List<Product_Add>) {
         val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
         productListLayout.removeAllViews()
 
-        for (product in products) {
+        for (product in productAdds) {
             try {
                 val productView = layoutInflater.inflate(R.layout.product_item, null)
 

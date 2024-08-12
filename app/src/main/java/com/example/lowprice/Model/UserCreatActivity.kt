@@ -1,4 +1,4 @@
-package com.example.lowprice
+package com.example.lowprice.Model
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.lowprice.app.router_backend.UserCreateRequest
-import com.example.lowprice.app.router_backend.UserService
+import com.example.lowprice.Model.ApiService.CreatUser_Api
+import com.example.lowprice.R
+import com.example.lowprice.ViewModel.MainActivity
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -21,9 +22,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class user_creat : AppCompatActivity() {
+class UserCreatActivity : AppCompatActivity() {
 
-    private lateinit var userService: UserService
+    private lateinit var userService: CreatUser_Api
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,7 @@ class user_creat : AppCompatActivity() {
             .client(httpClient)
             .build()
 
-        userService = retrofit.create(UserService::class.java)
+        userService = retrofit.create(CreatUser_Api::class.java)
 
         val nameEditText: EditText = findViewById(R.id.text_name)
         val phoneEditText: EditText = findViewById(R.id.text_phone)
@@ -105,22 +107,22 @@ class user_creat : AppCompatActivity() {
             } else if (password.length != 6) { // Senha deve ter no mínimo 6 dígitos
                 Toast.makeText(this, "A senha deve ter  6 dígitos", Toast.LENGTH_SHORT).show()
             } else {
-                val userCreateRequest = UserCreateRequest(name, phone, password)
+                val userCreateRequest = CreatUser(name, phone, password)
 
                 userService.createUser(userCreateRequest).enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
-                            Toast.makeText(this@user_creat, "Conta criada com sucesso", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@user_creat, MainActivity::class.java)
+                            Toast.makeText(this@UserCreatActivity, "Conta criada com sucesso", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@UserCreatActivity, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
-                            Toast.makeText(this@user_creat, "Numéro já em uso", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@UserCreatActivity, "Numéro já em uso", Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
-                        Toast.makeText(this@user_creat, "Erro: " + t.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@UserCreatActivity, "Erro: " + t.message, Toast.LENGTH_SHORT).show()
                     }
                 })
             }

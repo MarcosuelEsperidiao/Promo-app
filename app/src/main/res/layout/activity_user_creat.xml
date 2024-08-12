@@ -6,7 +6,7 @@
     android:background="@color/green"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user_creat">
+    tools:context=".Model.UserCreatActivity">
 
     <TextView
         android:textColor="@color/white"
