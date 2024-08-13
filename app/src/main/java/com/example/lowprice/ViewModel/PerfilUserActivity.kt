@@ -23,7 +23,12 @@ class PerfilUserActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_perfil_user)
 
-        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+        getWindow().setNavigationBarColor(
+            ContextCompat.getColor(
+                this,
+                R.color.navigation_bar_color
+            )
+        );
 
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val userName = sharedPreferences.getString("userName", "")

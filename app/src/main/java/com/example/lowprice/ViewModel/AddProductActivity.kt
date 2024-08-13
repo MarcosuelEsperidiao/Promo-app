@@ -157,7 +157,8 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     private fun createImageFile(): File? {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_",
@@ -277,13 +278,18 @@ class AddProductActivity : AppCompatActivity() {
                     val intent = Intent(this@AddProductActivity, LayoutUserActivity::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this@AddProductActivity, "Failed to add product", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@AddProductActivity,
+                        "Failed to add product",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(this@AddProductActivity, "Error: " + t.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AddProductActivity, "Error: " + t.message, Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }

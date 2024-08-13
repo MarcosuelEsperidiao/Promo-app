@@ -48,7 +48,12 @@ class LayoutUserActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_layout_user)
 
-        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigation_bar_color));
+        getWindow().setNavigationBarColor(
+            ContextCompat.getColor(
+                this,
+                R.color.navigation_bar_color
+            )
+        );
 
 
         scrollView = findViewById(R.id.scroll_view)
@@ -58,7 +63,7 @@ class LayoutUserActivity : AppCompatActivity() {
         val userName = sharedPreferences.getString("userName", "")
 
         val textViewName: TextView = findViewById(R.id.t_name)
-        textViewName.text =  "Olá, ${userName ?: "usuário"}"
+        textViewName.text = "Olá, ${userName ?: "usuário"}"
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -125,7 +130,10 @@ class LayoutUserActivity : AppCompatActivity() {
     }
 
     private fun openGallery() {
-        val pickPhoto = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val pickPhoto = Intent(
+            Intent.ACTION_PICK,
+            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
         startActivityForResult(pickPhoto, REQUEST_IMAGE_PICK)
     }
 
@@ -141,6 +149,7 @@ class LayoutUserActivity : AppCompatActivity() {
                         .transform(CircleCrop())
                         .into(imgPerfil)
                 }
+
                 REQUEST_IMAGE_PICK -> {
                     val selectedImage = data?.data
                     selectedImage?.let {
@@ -193,20 +202,28 @@ class LayoutUserActivity : AppCompatActivity() {
         val service = retrofit.create(AddProduct_Api::class.java)
 
         service.getProducts().enqueue(object : Callback<List<Product_Add>> {
-            override fun onResponse(call: Call<List<Product_Add>>, response: Response<List<Product_Add>>) {
+            override fun onResponse(
+                call: Call<List<Product_Add>>,
+                response: Response<List<Product_Add>>
+            ) {
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
                     addProductsToLayout(productList)
                     swipeRefreshLayout.isRefreshing = false
                 } else {
-                    Toast.makeText(this@LayoutUserActivity, "Failed to load products", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@LayoutUserActivity,
+                        "Failed to load products",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
                 swipeRefreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<Product_Add>>, t: Throwable) {
-                Toast.makeText(this@LayoutUserActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LayoutUserActivity, "Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }

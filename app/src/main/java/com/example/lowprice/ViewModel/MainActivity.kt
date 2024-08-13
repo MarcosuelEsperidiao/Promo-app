@@ -55,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         val btnLogin: Button = findViewById(R.id.btn_button)
 
         val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
@@ -64,7 +65,12 @@ class MainActivity : AppCompatActivity() {
 
         textCreate.setOnClickListener {
             if (vibrator.hasVibrator()) {
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        50,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             }
             val intent = Intent(this, UserCreatActivity::class.java)
             startActivity(intent)
@@ -82,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 if (isUpdating) return
 
-                val raw = s.toString().replace("[^\\d]".toRegex(), "")
+                val raw = s.toString().replace("\\D".toRegex(), "")
                 val formatted = formatPhoneNumber(raw)
 
                 isUpdating = true
@@ -100,8 +106,19 @@ class MainActivity : AppCompatActivity() {
                     length == 0 -> ""
                     length <= 2 -> "($s"
                     length <= 7 -> "(${s.substring(0, 2)}) ${s.substring(2)}"
-                    length <= 11 -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${s.substring(3, 7)}-${s.substring(7)}"
-                    else -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${s.substring(3, 7)}-${s.substring(7, 11)}"
+                    length <= 11 -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${
+                        s.substring(
+                            3,
+                            7
+                        )
+                    }-${s.substring(7)}"
+
+                    else -> "(${s.substring(0, 2)}) ${s.substring(2, 3)} ${
+                        s.substring(
+                            3,
+                            7
+                        )
+                    }-${s.substring(7, 11)}"
                 }
             }
         })
@@ -111,13 +128,23 @@ class MainActivity : AppCompatActivity() {
             val password = editPassword.text.toString().trim()
 
             if (vibrator.hasVibrator()) {
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        50,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             }
 
             if (phone.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT)
+                    .show()
             } else if (phone.length < 16) { // Número de telefone formatado deve ter 16 caracteres
-                Toast.makeText(this, "O número de telefone deve ter no mínimo 11 dígitos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "O número de telefone deve ter no mínimo 11 dígitos",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else if (password.length != 6) { // Senha deve ter no mínimo 6 dígitos
                 Toast.makeText(this, "Dados inválidos", Toast.LENGTH_SHORT).show()
             } else {
@@ -130,23 +157,30 @@ class MainActivity : AppCompatActivity() {
                 val loginRequest = LoginRequest(phone, password)
 
                 service.loginUser(loginRequest).enqueue(object : Callback<LoginResponse> {
-                    override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    override fun onResponse(
+                        call: Call<LoginResponse>,
+                        response: Response<LoginResponse>
+                    ) {
                         if (response.isSuccessful) {
                             val loginResponse = response.body()
                             if (loginResponse != null) {
                                 sharedPreferences.edit().putBoolean("isAuthenticated", true).apply()
-                                sharedPreferences.edit().putString("userName", loginResponse.name).apply()
-                                val intent = Intent(this@MainActivity, LayoutUserActivity::class.java)
+                                sharedPreferences.edit().putString("userName", loginResponse.name)
+                                    .apply()
+                                val intent =
+                                    Intent(this@MainActivity, LayoutUserActivity::class.java)
                                 startActivity(intent)
                                 finish()
                             }
                         } else {
-                            Toast.makeText(this@MainActivity, "Dados inválidos", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "Dados inválidos", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
 
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Toast.makeText(this@MainActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Erro: ${t.message}", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 })
             }
