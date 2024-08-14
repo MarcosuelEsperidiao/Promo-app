@@ -43,7 +43,6 @@
         android:id="@+id/text_locario"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-
         android:gravity="center"
         android:textColor="@color/white"
         android:layout_below="@id/text_location"
