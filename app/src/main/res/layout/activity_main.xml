@@ -6,7 +6,7 @@
     android:background="@drawable/gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewModel.MainActivity">
+    tools:context=".View.MainActivity">
 
     <TextView
         android:layout_marginTop="20dp"

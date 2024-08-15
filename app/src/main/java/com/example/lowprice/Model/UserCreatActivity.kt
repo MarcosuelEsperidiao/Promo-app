@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.lowprice.Model.ApiService.CreatUser_Api
 import com.example.lowprice.R
-import com.example.lowprice.ViewModel.MainActivity
+import com.example.lowprice.View.MainActivity
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

@@ -6,7 +6,7 @@
     android:background="#009688"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewModel.LayoutUserActivity">
+    tools:context=".View.LayoutUserActivity">
 
     <TextView
         android:id="@+id/text_prices"

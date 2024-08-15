@@ -1,4 +1,4 @@
-package com.example.lowprice.ViewModel
+package com.example.lowprice.View
 
 import android.annotation.SuppressLint
 import android.app.Activity
