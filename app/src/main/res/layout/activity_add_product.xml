@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green"
+    android:background="@drawable/gradient"
     tools:context=".View.AddProductActivity">
 
     <TextView
@@ -13,24 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="Compartilhar Promoção"
+        android:text="Adicionar Produto"
         android:textColor="@color/white"
         android:textSize="30sp" />
 
-    <View
-        android:id="@+id/text_view_shere"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_below="@id/text_shere"
-        android:layout_margin="20dp"
-        android:background="@color/white" />
+
 
     <EditText
         android:id="@+id/text_location"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:maxLines="1"
-        android:layout_below="@id/text_view_shere"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/text_shere"
         android:inputType="text"
         android:textColor="@color/white"
         android:layout_marginStart="30dp"
