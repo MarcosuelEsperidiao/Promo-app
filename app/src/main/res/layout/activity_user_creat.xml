@@ -6,7 +6,7 @@
     android:background="@drawable/gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Model.UserCreatActivity">
+    tools:context=".View.UserCreatActivity">
 
     <TextView
         android:textColor="@color/white"

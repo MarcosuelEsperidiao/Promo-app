@@ -10,10 +10,6 @@ def get_products_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def get_users_db_connection():
-    conn = sqlite3.connect('database2.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @app.route('/products', methods=['POST'])
 def add_product():
@@ -25,22 +21,26 @@ def add_product():
     locario = data.get('locario')
     price = data.get('price')
     image = data.get('image')
+    userName = data.get('userName')  # Nome do usuário
+    profileImage = data.get('profileImage')  # Imagem de perfil
 
-    if not all([location, locario, price]):
+    if not all([location, locario, price, userName, profileImage]):
         return jsonify({'message': 'Missing required fields'}), 400
 
     try:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('''
-            INSERT INTO Product (location, locario, price, image) 
-            VALUES (?, ?, ?, ?)
-            ''', (location, locario, price, image))
+            INSERT INTO Product (location, locario, price, image, userName, profileImage) 
+            VALUES (?, ?, ?, ?, ?, ?)
+            ''', (location, locario, price, image, userName, profileImage))
             conn.commit()
     except sqlite3.Error as e:
         return jsonify({'message': str(e)}), 500
 
     return jsonify({'message': 'Product added successfully'})
+
+
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -56,13 +56,14 @@ def get_products():
             'location': product[1],
             'locario': product[2],
             'price': product[3],
-            'image': product[4]
-
-            
+            'image': product[4],
+            'userName': product[5],  # Nome do usuário
+            'profileImage': product[6]  # Imagem de perfil
         }
         product_list.append(product_dict)
 
     return jsonify(product_list)
+
 
 @app.route('/products/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
@@ -168,4 +169,4 @@ def login_user():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

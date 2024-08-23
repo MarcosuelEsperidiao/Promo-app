@@ -50,7 +50,7 @@
             android:name=".View.LayoutUserActivity"
             android:exported="false" />
         <activity
-            android:name=".Model.UserCreatActivity"
+            android:name=".View.UserCreatActivity"
             android:exported="false" />
         <activity
             android:name=".View.MainActivity"

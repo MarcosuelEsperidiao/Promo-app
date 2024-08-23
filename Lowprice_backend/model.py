@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS Product (
     location TEXT NOT NULL,
     locario TEXT NOT NULL,
     price REAL NOT NULL,
-    image TEXT
+    image TEXT,
+    userName TEXT,         -- Nova coluna para armazenar o nome de usuário
+    profileImage TEXT      -- Nova coluna para armazenar a imagem de perfil
 )
 ''')
 
@@ -20,9 +22,9 @@ conn.commit()
 
 # Inserir um registro na tabela Product
 cursor.execute('''
-INSERT INTO Product (location, locario, price, image) 
-VALUES (?, ?, ?, ?)
-''', ('São Paulo', 'Centro', 150.0, 'http://example.com/image.jpg'))
+INSERT INTO Product (location, locario, price, image, userName, profileImage) 
+VALUES (?, ?, ?, ?, ?, ?)
+''', ('São Paulo', 'Centro', 150.0, 'http://example.com/image.jpg', 'Usuario1', 'http://example.com/profile.jpg'))
 
 # Confirmar a transação
 conn.commit()

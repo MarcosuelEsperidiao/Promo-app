@@ -195,7 +195,7 @@ class LayoutUserActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://144.22.225.3:5000/") // Altere para o endereço correto do seu servidor
+            .baseUrl("http://192.168.0.64:5000/") // Altere para o endereço correto do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -232,6 +232,7 @@ class LayoutUserActivity : AppCompatActivity() {
         val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
         productListLayout.removeAllViews()
 
+
         for (product in productAdds) {
             try {
                 val productView = layoutInflater.inflate(R.layout.product_item, null)
@@ -240,6 +241,11 @@ class LayoutUserActivity : AppCompatActivity() {
                 val textLocario = productView.findViewById<TextView>(R.id.text_locario)
                 val textPriceDetail = productView.findViewById<TextView>(R.id.text_price_detail)
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
+
+                val textUserName = productView.findViewById<TextView>(R.id.text_user_name)
+                val imageViewProfile = productView.findViewById<ImageView>(R.id.imageViewProfile)
+
+
 
                 textLocation.text = product.location
                 textLocario.text = "Endereço: ${product.locario}"
@@ -250,6 +256,19 @@ class LayoutUserActivity : AppCompatActivity() {
                         val byteArray = Base64.decode(it, Base64.DEFAULT)
                         val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
                         imageViewPreview.setImageBitmap(bitmap)
+                    }
+                }
+
+                textUserName.text = product.userName
+
+                product.profileImage?.let {
+                    if (it.isNotEmpty()) {
+                        val byteArray = Base64.decode(it, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                        Glide.with(this)
+                            .load(bitmap)
+                            .transform(CircleCrop())
+                            .into(imageViewProfile)
                     }
                 }
 

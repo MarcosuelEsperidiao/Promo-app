@@ -225,6 +225,11 @@ class AddProductActivity : AppCompatActivity() {
         val locarioText = editTextLocario.text.toString()
         val priceText = editTextPrice.text.toString()
 
+        // Recuperar o nome do usuário e a foto de perfil de SharedPreferences
+        val sharedPreferencesUser = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+        val userName = sharedPreferencesUser.getString("userName", "")
+        val userProfileImageString = sharedPreferencesUser.getString("profileImage", "")
+
         val sharedPreferences = getSharedPreferences("ProductInfo", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
@@ -242,9 +247,7 @@ class AddProductActivity : AppCompatActivity() {
         val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
         editor.putString("image_$productCount", imageString)
 
-
         editor.putInt("product_count", productCount + 1)
-
         editor.apply()
 
         val logging = HttpLoggingInterceptor().apply {
@@ -256,15 +259,22 @@ class AddProductActivity : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://144.22.225.3:5000/")  // Substitua pelo IP do seu servidor
+            .baseUrl("http://192.168.0.64:5000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
 
         val service = retrofit.create(AddProduct_Api::class.java)
 
-
-        val productAdd = Product_Add(locationText, locarioText, priceText.toFloat(), imageString)
+        // Agora incluímos o nome do usuário e a imagem de perfil ao enviar o produto
+        val productAdd = Product_Add(
+            locationText,
+            locarioText,
+            priceText.toFloat(),
+            imageString,
+            userName ?: "",
+            userProfileImageString ?: ""
+        )
 
         service.addProduct(productAdd).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -282,8 +292,7 @@ class AddProductActivity : AppCompatActivity() {
                         this@AddProductActivity,
                         "Failed to add product",
                         Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    ).show()
                 }
             }
 
@@ -293,6 +302,7 @@ class AddProductActivity : AppCompatActivity() {
             }
         })
     }
+
 
     private fun checkAllFields() {
         val isLocationFilled = editTextLocation.text.toString().isNotEmpty()

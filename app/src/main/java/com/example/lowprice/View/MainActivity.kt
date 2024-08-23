@@ -20,7 +20,6 @@ import com.example.lowprice.Model.ApiService.LoginCheck_Api
 import com.example.lowprice.Model.LoginRequest
 import com.example.lowprice.Model.LoginResponse
 import com.example.lowprice.R
-import com.example.lowprice.Model.UserCreatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
