@@ -4,7 +4,7 @@ import sqlite3
 conn = sqlite3.connect('database1.db')
 cursor = conn.cursor()
 
-# Criar a tabela Product
+# Criar a tabela Product com a nova coluna description
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Product (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,19 +12,20 @@ CREATE TABLE IF NOT EXISTS Product (
     locario TEXT NOT NULL,
     price REAL NOT NULL,
     image TEXT,
-    userName TEXT,         -- Nova coluna para armazenar o nome de usuário
-    profileImage TEXT      -- Nova coluna para armazenar a imagem de perfil
+    userName TEXT,         -- Coluna para armazenar o nome de usuário
+    profileImage TEXT,     -- Coluna para armazenar a imagem de perfil
+    description TEXT       -- Nova coluna para armazenar a descrição do produto
 )
 ''')
 
 # Confirmar a transação
 conn.commit()
 
-# Inserir um registro na tabela Product
+# Inserir um registro na tabela Product com a nova coluna description
 cursor.execute('''
-INSERT INTO Product (location, locario, price, image, userName, profileImage) 
-VALUES (?, ?, ?, ?, ?, ?)
-''', ('São Paulo', 'Centro', 150.0, 'http://example.com/image.jpg', 'Usuario1', 'http://example.com/profile.jpg'))
+INSERT INTO Product (location, locario, price, image, userName, profileImage, description) 
+VALUES (?, ?, ?, ?, ?, ?, ?)
+''', ('São Paulo', 'Centro', 150.0, 'http://example.com/image.jpg', 'Usuario1', 'http://example.com/profile.jpg', 'Descrição do produto'))
 
 # Confirmar a transação
 conn.commit()

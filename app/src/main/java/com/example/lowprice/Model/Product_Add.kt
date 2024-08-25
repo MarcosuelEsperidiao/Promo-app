@@ -6,6 +6,7 @@ data class Product_Add(
     val price: Float,
     val image: String?,
     val userName: String?,  // Novo campo para o nome de usuário
-    val profileImage: String?  // Novo campo para a imagem de perfil
+    val profileImage: String?,  // Novo campo para a imagem de perfil
+    val description: String
 )
 

@@ -21,25 +21,25 @@ def add_product():
     locario = data.get('locario')
     price = data.get('price')
     image = data.get('image')
-    userName = data.get('userName')  # Nome do usuário
-    profileImage = data.get('profileImage')  # Imagem de perfil
+    userName = data.get('userName')
+    profileImage = data.get('profileImage')
+    description = data.get('description')  # Nova descrição
 
-    if not all([location, locario, price, userName, profileImage]):
+    if not all([location, locario, price, userName, profileImage, description]):
         return jsonify({'message': 'Missing required fields'}), 400
 
     try:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('''
-            INSERT INTO Product (location, locario, price, image, userName, profileImage) 
-            VALUES (?, ?, ?, ?, ?, ?)
-            ''', (location, locario, price, image, userName, profileImage))
+            INSERT INTO Product (location, locario, price, image, userName, profileImage, description) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (location, locario, price, image, userName, profileImage, description))
             conn.commit()
     except sqlite3.Error as e:
         return jsonify({'message': str(e)}), 500
 
     return jsonify({'message': 'Product added successfully'})
-
 
 
 @app.route('/products', methods=['GET'])
@@ -58,7 +58,8 @@ def get_products():
             'price': product[3],
             'image': product[4],
             'userName': product[5],  # Nome do usuário
-            'profileImage': product[6]  # Imagem de perfil
+            'profileImage': product[6],  # Imagem de perfil
+            'description': product[7]  # Descrição do produto
         }
         product_list.append(product_dict)
 

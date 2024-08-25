@@ -7,26 +7,14 @@
     android:background="@drawable/gradient"
     tools:context=".View.AddProductActivity">
 
-    <TextView
-        android:id="@+id/text_shere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="Adicionar Produto"
-        android:textColor="@color/white"
-        android:textSize="30sp" />
-
-
 
     <EditText
         android:id="@+id/text_location"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:maxLines="1"
+        android:inputType="textCapWords"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/text_shere"
-        android:inputType="text"
         android:textColor="@color/white"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
@@ -38,13 +26,15 @@
         android:id="@+id/text_locario"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:gravity="center"
+        android:textAlignment="center"
+        android:gravity="bottom"
         android:textColor="@color/white"
         android:layout_below="@id/text_location"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:hint="Endereço"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/white"
+        tools:ignore="RtlCompat" />
 
     <ImageView
         android:id="@+id/imageView_location"
@@ -92,15 +82,38 @@
         android:layout_marginTop="250dp"
         android:src="@drawable/baseline_photo_camera" />
 
+    <EditText
+        android:id="@+id/description"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:padding="5dp"
+        android:gravity="top"
+        android:textColor="@color/black"
+        android:maxLength="80"
+        android:background="@color/white"
+        android:hint="Descrição do Produto"
+        android:layout_width="match_parent"
+        android:layout_below="@id/imageViewCamera"
+        android:layout_height="70dp"/>
+
+    <TextView
+        android:layout_below="@id/description"
+        android:layout_marginStart="10dp"
+        android:text="80 Caracteres"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/sendButton"
         android:text="Enviar"
         android:textColor="@color/green"
         android:stateListAnimator="@null"
         android:elevation="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="#DADADA"
-        android:layout_below="@id/imageViewCamera"
+        android:layout_below="@id/description"
         android:layout_centerHorizontal="true"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>

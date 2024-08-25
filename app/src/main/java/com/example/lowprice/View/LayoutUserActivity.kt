@@ -232,7 +232,6 @@ class LayoutUserActivity : AppCompatActivity() {
         val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
         productListLayout.removeAllViews()
 
-
         for (product in productAdds) {
             try {
                 val productView = layoutInflater.inflate(R.layout.product_item, null)
@@ -240,16 +239,16 @@ class LayoutUserActivity : AppCompatActivity() {
                 val textLocation = productView.findViewById<TextView>(R.id.text_location)
                 val textLocario = productView.findViewById<TextView>(R.id.text_locario)
                 val textPriceDetail = productView.findViewById<TextView>(R.id.text_price_detail)
+                val textDescription = productView.findViewById<TextView>(R.id.text_description)
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
 
                 val textUserName = productView.findViewById<TextView>(R.id.text_user_name)
                 val imageViewProfile = productView.findViewById<ImageView>(R.id.imageViewProfile)
 
-
-
                 textLocation.text = product.location
                 textLocario.text = "Endereço: ${product.locario}"
                 textPriceDetail.text = "Preço: R$ ${product.price}"
+                textDescription.text = product.description
 
                 product.image?.let {
                     if (it.isNotEmpty()) {
@@ -274,9 +273,8 @@ class LayoutUserActivity : AppCompatActivity() {
 
                 productListLayout.addView(productView)
             } catch (e: Exception) {
-                // Log the exception if necessary
                 e.printStackTrace()
-                continue // Continue with the next product if there's an error
+                continue
             }
         }
     }

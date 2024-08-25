@@ -49,6 +49,7 @@ class AddProductActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private val REQUEST_IMAGE_CAPTURE = 2
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var editTextDescription: EditText
     private lateinit var editTextLocario: EditText
     private lateinit var imageViewPreview: ImageView
     private lateinit var editTextLocation: EditText
@@ -70,6 +71,7 @@ class AddProductActivity : AppCompatActivity() {
         );
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        editTextDescription = findViewById(R.id.description)
         editTextLocario = findViewById(R.id.text_locario)
         imageViewPreview = findViewById(R.id.imageViewPreview)
         editTextLocation = findViewById(R.id.text_location)
@@ -224,6 +226,7 @@ class AddProductActivity : AppCompatActivity() {
         val locationText = editTextLocation.text.toString()
         val locarioText = editTextLocario.text.toString()
         val priceText = editTextPrice.text.toString()
+        val descriptionText = editTextDescription.text.toString()
 
         // Recuperar o nome do usuário e a foto de perfil de SharedPreferences
         val sharedPreferencesUser = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
@@ -239,6 +242,7 @@ class AddProductActivity : AppCompatActivity() {
         editor.putString("text_location_$productCount", locationText)
         editor.putString("text_locario_$productCount", locarioText)
         editor.putString("price_$productCount", priceText)
+        editor.putString("description_$productCount", descriptionText)
 
         val bitmap = (imageViewPreview.drawable as BitmapDrawable).bitmap
         val stream = ByteArrayOutputStream()
@@ -273,8 +277,10 @@ class AddProductActivity : AppCompatActivity() {
             priceText.toFloat(),
             imageString,
             userName ?: "",
-            userProfileImageString ?: ""
+            userProfileImageString ?: "",
+            descriptionText
         )
+
 
         service.addProduct(productAdd).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
