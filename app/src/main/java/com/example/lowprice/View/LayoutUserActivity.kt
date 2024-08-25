@@ -37,7 +37,7 @@ class LayoutUserActivity : AppCompatActivity() {
 
     private lateinit var scrollView: ScrollView
     private lateinit var imgPerfil: ImageView
-
+    private lateinit var camProfileImage: ImageView
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_PICK = 2
 
@@ -55,7 +55,7 @@ class LayoutUserActivity : AppCompatActivity() {
             )
         );
 
-
+        camProfileImage = findViewById(R.id.cam_profile_image)
         scrollView = findViewById(R.id.scroll_view)
         imgPerfil = findViewById(R.id.img_perfil)
 
@@ -144,10 +144,7 @@ class LayoutUserActivity : AppCompatActivity() {
                 REQUEST_IMAGE_CAPTURE -> {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
                     saveProfileImage(imageBitmap)
-                    Glide.with(this)
-                        .load(imageBitmap)
-                        .transform(CircleCrop())
-                        .into(imgPerfil)
+                    loadProfileImage()  // Atualiza a visibilidade da câmera
                 }
 
                 REQUEST_IMAGE_PICK -> {
@@ -156,16 +153,12 @@ class LayoutUserActivity : AppCompatActivity() {
                         val inputStream = contentResolver.openInputStream(it)
                         val imageBitmap = BitmapFactory.decodeStream(inputStream)
                         saveProfileImage(imageBitmap)
-                        Glide.with(this)
-                            .load(selectedImage)
-                            .transform(CircleCrop())
-                            .into(imgPerfil)
+                        loadProfileImage()  // Atualiza a visibilidade da câmera
                     }
                 }
             }
         }
     }
-
     private fun saveProfileImage(bitmap: Bitmap) {
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -180,13 +173,17 @@ class LayoutUserActivity : AppCompatActivity() {
     private fun loadProfileImage() {
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val encodedImage = sharedPreferences.getString("profileImage", null)
-        encodedImage?.let {
-            val byteArray = Base64.decode(it, Base64.DEFAULT)
+
+        if (encodedImage != null) {
+            val byteArray = Base64.decode(encodedImage, Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             Glide.with(this)
                 .load(bitmap)
                 .transform(CircleCrop())
                 .into(imgPerfil)
+            camProfileImage.visibility = ImageView.INVISIBLE  // Deixa a câmera invisível
+        } else {
+            camProfileImage.visibility = ImageView.VISIBLE  // Mostra a câmera
         }
     }
 
