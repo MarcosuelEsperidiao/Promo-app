@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@drawable/gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#257E45"
     tools:context=".View.LayoutUserActivity">
 
     <TextView
@@ -14,19 +14,19 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Promo"
-        android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:text="Promo.App"
+        android:textColor="#E8000000"
+        android:textSize="30sp"/>
 
     <ImageView
         android:id="@+id/img_perfil"
-        android:layout_below="@id/text_prices"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="15dp"
-        android:elevation="20dp"
-        android:src="@drawable/rounded_edittext"
         android:layout_width="50dp"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp"
+        android:layout_below="@id/text_prices"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:elevation="20dp"
+        android:src="@drawable/rounded_edittext" />
 
     <ImageView
         android:id="@+id/cam_profile_image"
@@ -49,34 +49,35 @@
 
     <View
         android:id="@+id/text_view"
-        android:layout_marginTop="80dp"
-        android:layout_below="@id/text_prices"
-        android:background="@color/black"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:layout_below="@id/text_prices"
+        android:layout_marginTop="80dp"
+        android:background="#308E52" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
-        android:layout_below="@id/text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <ScrollView
-        android:id="@+id/scroll_view"
-        android:layout_below="@id/text_view"
-        android:layout_above="@id/fixed_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="scroll">
+        android:layout_below="@id/text_view">
 
-        <LinearLayout
-            android:id="@+id/product_list_layout"
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- Items will be added dynamically here -->
-        </LinearLayout>
-    </ScrollView>
+            android:layout_above="@id/fixed_layout"
+            android:layout_below="@id/text_view"
+            android:background="@color/white"
+            android:contentDescription="scroll">
+
+            <LinearLayout
+                android:id="@+id/product_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Items will be added dynamically here -->
+            </LinearLayout>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
@@ -85,8 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:cardElevation="10dp"
-        android:background="#000000">
+        android:background="#000000"
+        app:cardElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,63 +100,64 @@
                 android:id="@+id/icon_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginEnd="10dp"
+                android:layout_weight="1"
                 android:src="@drawable/baseline_home_24" />
 
             <ImageView
                 android:id="@+id/icon_add_circle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_weight="1"
                 android:src="@drawable/baseline_add_circle_outline_24" />
 
             <ImageView
                 android:id="@+id/profile_user_"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginStart="10dp"
+                android:layout_weight="1"
                 android:src="@drawable/baseline_person_outline_24" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:layout_marginTop="35dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txt_start"
-                android:text="INICIO"
-                android:layout_weight="1"
-                android:textSize="10sp"
-                android:layout_marginStart="20dp"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:text="INICIO"
+                android:textAlignment="center"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/txt_add_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
                 android:text="ADICONAR PRODUTO"
                 android:textAlignment="center"
-                android:layout_marginStart="10dp"
-                android:textSize="10sp"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/txt_user"
-                android:text="USUARIO"
-                android:layout_marginEnd="15dp"
-                android:textAlignment="center"
-                android:textSize="10sp"
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:text="USUARIO"
+                android:textAlignment="center"
+                android:textSize="10sp" />
 
 
         </LinearLayout>

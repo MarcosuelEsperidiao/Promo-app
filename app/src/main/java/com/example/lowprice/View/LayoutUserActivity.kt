@@ -245,7 +245,9 @@ class LayoutUserActivity : AppCompatActivity() {
                 textLocation.text = product.location
                 textLocario.text = "Endereço: ${product.locario}"
                 textPriceDetail.text = "Preço: R$ ${product.price}"
-                textDescription.text = product.description
+                textDescription.text = "${product.userName}: ${product.description}"
+
+                
 
                 product.image?.let {
                     if (it.isNotEmpty()) {
