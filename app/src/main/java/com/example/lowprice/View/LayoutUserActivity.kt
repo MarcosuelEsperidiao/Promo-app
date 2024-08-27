@@ -5,7 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Base64
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -159,6 +166,7 @@ class LayoutUserActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun saveProfileImage(bitmap: Bitmap) {
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -245,9 +253,76 @@ class LayoutUserActivity : AppCompatActivity() {
                 textLocation.text = product.location
                 textLocario.text = "Endereço: ${product.locario}"
                 textPriceDetail.text = "Preço: R$ ${product.price}"
-                textDescription.text = "${product.userName}: ${product.description}"
+                textDescription.text = "Descrição: ${product.description}"
 
-                
+                // Preço (Style)
+                val priceText = "Preço: R$ ${product.price}"
+                val priceSpannable = SpannableString(priceText)
+                priceSpannable.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0,
+                    "Preço: ".length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                priceSpannable.setSpan(
+                    AbsoluteSizeSpan(18, true),
+                    0,
+                    priceText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                priceSpannable.setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    0,
+                    priceText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                textPriceDetail.text = priceSpannable
+
+                // Localização (Style)
+                val locarioText = "Endereço: ${product.locario}"
+                val locarioSpannable = SpannableString(locarioText)
+                locarioSpannable.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0,
+                    "Endereço: ".length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                locarioSpannable.setSpan(
+                    AbsoluteSizeSpan(18, true),
+                    0,
+                    locarioText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                locarioSpannable.setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    0,
+                    locarioText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                textLocario.text = locarioSpannable
+
+                // Descrição (Style)
+                val descriptionText = "Descrição: ${product.description}"
+                val descriptionSpannable = SpannableString(descriptionText)
+                descriptionSpannable.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0,
+                    "Descrição: ".length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                descriptionSpannable.setSpan(
+                    AbsoluteSizeSpan(18, true),
+                    0,
+                    descriptionText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                descriptionSpannable.setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    0,
+                    descriptionText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                textDescription.text = descriptionSpannable
 
                 product.image?.let {
                     if (it.isNotEmpty()) {
