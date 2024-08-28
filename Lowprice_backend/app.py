@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -23,7 +23,8 @@ def add_product():
     image = data.get('image')
     userName = data.get('userName')
     profileImage = data.get('profileImage')
-    description = data.get('description')  # Nova descrição
+    description = data.get('description')
+    timestamp = datetime.now().strftime('%H:%M %d-%m-%Y')
 
     if not all([location, locario, price, userName, profileImage, description]):
         return jsonify({'message': 'Missing required fields'}), 400
@@ -32,15 +33,16 @@ def add_product():
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('''
-            INSERT INTO Product (location, locario, price, image, userName, profileImage, description) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (location, locario, price, image, userName, profileImage, description))
+            INSERT INTO Product (location, locario, price, image, userName, profileImage, description, timestamp) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (location, locario, price, image, userName, profileImage, description, timestamp))
             conn.commit()
     except sqlite3.Error as e:
         return jsonify({'message': str(e)}), 500
 
     return jsonify({'message': 'Product added successfully'})
 
+##############################
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -57,14 +59,16 @@ def get_products():
             'locario': product[2],
             'price': product[3],
             'image': product[4],
-            'userName': product[5],  # Nome do usuário
-            'profileImage': product[6],  # Imagem de perfil
-            'description': product[7]  # Descrição do produto
+            'userName': product[5],
+            'profileImage': product[6],
+            'description': product[7],
+            'timestamp': product[8]  # Adiciona o timestamp na resposta
         }
         product_list.append(product_dict)
 
     return jsonify(product_list)
 
+########################################
 
 @app.route('/products/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):

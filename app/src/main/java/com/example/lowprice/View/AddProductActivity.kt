@@ -227,6 +227,7 @@ class AddProductActivity : AppCompatActivity() {
         val locarioText = editTextLocario.text.toString()
         val priceText = editTextPrice.text.toString()
         val descriptionText = editTextDescription.text.toString()
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
         // Recuperar o nome do usuário e a foto de perfil de SharedPreferences
         val sharedPreferencesUser = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
@@ -243,6 +244,7 @@ class AddProductActivity : AppCompatActivity() {
         editor.putString("text_locario_$productCount", locarioText)
         editor.putString("price_$productCount", priceText)
         editor.putString("description_$productCount", descriptionText)
+        editor.putString("timestamp_$productCount", timestamp)
 
         val bitmap = (imageViewPreview.drawable as BitmapDrawable).bitmap
         val stream = ByteArrayOutputStream()
@@ -250,6 +252,8 @@ class AddProductActivity : AppCompatActivity() {
         val byteArray = stream.toByteArray()
         val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
         editor.putString("image_$productCount", imageString)
+
+
 
         editor.putInt("product_count", productCount + 1)
         editor.apply()
@@ -270,7 +274,7 @@ class AddProductActivity : AppCompatActivity() {
 
         val service = retrofit.create(AddProduct_Api::class.java)
 
-        // Agora incluímos o nome do usuário e a imagem de perfil ao enviar o produto
+        // Agora incluímos o nome do usuário, a imagem de perfil e o timestamp ao enviar o produto
         val productAdd = Product_Add(
             locationText,
             locarioText,
@@ -278,9 +282,9 @@ class AddProductActivity : AppCompatActivity() {
             imageString,
             userName ?: "",
             userProfileImageString ?: "",
-            descriptionText
+            descriptionText,
+            timestamp  // Incluindo o timestamp
         )
-
 
         service.addProduct(productAdd).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -308,6 +312,7 @@ class AddProductActivity : AppCompatActivity() {
             }
         })
     }
+
 
 
     private fun checkAllFields() {

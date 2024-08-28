@@ -245,8 +245,8 @@ class LayoutUserActivity : AppCompatActivity() {
                 val textLocario = productView.findViewById<TextView>(R.id.text_locario)
                 val textPriceDetail = productView.findViewById<TextView>(R.id.text_price_detail)
                 val textDescription = productView.findViewById<TextView>(R.id.text_description)
+                val textTimestamp = productView.findViewById<TextView>(R.id.text_timestamp)
                 val imageViewPreview = productView.findViewById<ImageView>(R.id.imageViewPreview)
-
                 val textUserName = productView.findViewById<TextView>(R.id.text_user_name)
                 val imageViewProfile = productView.findViewById<ImageView>(R.id.imageViewProfile)
 
@@ -254,6 +254,7 @@ class LayoutUserActivity : AppCompatActivity() {
                 textLocario.text = "Endereço: ${product.locario}"
                 textPriceDetail.text = "Preço: R$ ${product.price}"
                 textDescription.text = "Descrição: ${product.description}"
+                textTimestamp.text = product.timestamp
 
                 // Preço (Style)
                 val priceText = "Preço: R$ ${product.price}"

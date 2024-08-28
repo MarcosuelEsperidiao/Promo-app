@@ -14,8 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Promo.App"
-        android:textColor="#E8000000"
+        android:text="Promo-App"
+        android:textStyle="bold"
+        android:fontFamily="@font/raleway_medium"
+        android:textColor="@color/black"
         android:textSize="30sp"/>
 
     <ImageView
