@@ -200,7 +200,7 @@ class LayoutUserActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.64:5000/") // Altere para o endereço correto do seu servidor
+            .baseUrl("http://144.22.225.3:5000/") // Altere para o endereço correto do seu servidor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

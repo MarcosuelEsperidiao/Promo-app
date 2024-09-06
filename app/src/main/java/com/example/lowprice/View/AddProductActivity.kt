@@ -267,7 +267,7 @@ class AddProductActivity : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.64:5000/")
+            .baseUrl("http://144.22.225.3:5000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
