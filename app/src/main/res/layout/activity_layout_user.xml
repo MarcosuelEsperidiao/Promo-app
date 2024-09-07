@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/img_perfil"
         android:layout_marginStart="-23dp"
+        android:elevation="20dp"
         android:layout_toEndOf="@id/img_perfil"
         android:src="@drawable/baseline_photo_camera" />
 

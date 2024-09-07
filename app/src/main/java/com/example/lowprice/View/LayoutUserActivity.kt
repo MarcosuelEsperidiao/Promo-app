@@ -66,6 +66,7 @@ class LayoutUserActivity : AppCompatActivity() {
         scrollView = findViewById(R.id.scroll_view)
         imgPerfil = findViewById(R.id.img_perfil)
 
+
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val userName = sharedPreferences.getString("userName", "")
 
