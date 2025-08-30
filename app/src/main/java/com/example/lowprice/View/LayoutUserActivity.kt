@@ -2,6 +2,7 @@ package com.example.lowprice.View
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -326,27 +327,49 @@ class LayoutUserActivity : AppCompatActivity() {
                 )
                 textDescription.text = descriptionSpannable
 
-                product.image?.let {
-                    if (it.isNotEmpty()) {
-                        val byteArray = Base64.decode(it, Base64.DEFAULT)
-                        val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                        imageViewPreview.setImageBitmap(bitmap)
+                product.image?.let { base64String ->
+                    if (base64String.isNotEmpty()) {
+                        try {
+                            val byteArray = Base64.decode(base64String, Base64.DEFAULT)
+                            Glide.with(this@LayoutUserActivity)
+                                .load(byteArray)
+                                .placeholder(android.R.drawable.ic_menu_gallery) // ✅ Icone padrão
+                                .error(android.R.drawable.ic_dialog_alert) // ✅ Icone de erro padrão
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imageViewPreview)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            imageViewPreview.setImageResource(android.R.drawable.ic_dialog_alert)
+                        }
+                    } else {
+                        imageViewPreview.setImageResource(android.R.drawable.ic_menu_gallery)
                     }
+                } ?: run {
+                    imageViewPreview.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
 
-                textUserName.text = product.userName
-
-                product.profileImage?.let {
-                    if (it.isNotEmpty()) {
-                        val byteArray = Base64.decode(it, Base64.DEFAULT)
-                        val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                        Glide.with(this)
-                            .load(bitmap)
-                            .transform(CircleCrop())
-                            .into(imageViewProfile)
+// Para a imagem de perfil
+                product.profileImage?.let { base64String ->
+                    if (base64String.isNotEmpty()) {
+                        try {
+                            val byteArray = Base64.decode(base64String, Base64.DEFAULT)
+                            Glide.with(this@LayoutUserActivity)
+                                .load(byteArray)
+                                .transform(CircleCrop())
+                                .placeholder(android.R.drawable.ic_menu_gallery)
+                                .error(android.R.drawable.ic_dialog_alert)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imageViewProfile)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            imageViewProfile.setImageResource(android.R.drawable.ic_dialog_alert)
+                        }
+                    } else {
+                        imageViewProfile.setImageResource(android.R.drawable.ic_menu_gallery)
                     }
+                } ?: run {
+                    imageViewProfile.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
-
                 productListLayout.addView(productView)
             } catch (e: Exception) {
                 e.printStackTrace()
