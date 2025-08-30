@@ -6,5 +6,8 @@
         <item>@font/amiko</item>
         <item>@font/archivo_black</item>
         <item>@font/beth_ellen</item>
+        <item>@font/raleway_medium</item>
+        <item>@font/roboto</item>
+        <item>@font/roboto_thin</item>
     </array>
 </resources>

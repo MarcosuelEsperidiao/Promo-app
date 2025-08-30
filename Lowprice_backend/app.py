@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -8,10 +10,6 @@ def get_products_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def get_users_db_connection():
-    conn = sqlite3.connect('database2.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @app.route('/products', methods=['POST'])
 def add_product():
@@ -23,22 +21,28 @@ def add_product():
     locario = data.get('locario')
     price = data.get('price')
     image = data.get('image')
+    userName = data.get('userName')
+    profileImage = data.get('profileImage')
+    description = data.get('description')
+    timestamp = datetime.now().strftime('%H:%M %d-%m-%Y')
 
-    if not all([location, locario, price]):
+    if not all([location, locario, price, userName, profileImage, description]):
         return jsonify({'message': 'Missing required fields'}), 400
 
     try:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('''
-            INSERT INTO Product (location, locario, price, image) 
-            VALUES (?, ?, ?, ?)
-            ''', (location, locario, price, image))
+            INSERT INTO Product (location, locario, price, image, userName, profileImage, description, timestamp) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (location, locario, price, image, userName, profileImage, description, timestamp))
             conn.commit()
     except sqlite3.Error as e:
         return jsonify({'message': str(e)}), 500
 
     return jsonify({'message': 'Product added successfully'})
+
+##############################
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -54,11 +58,17 @@ def get_products():
             'location': product[1],
             'locario': product[2],
             'price': product[3],
-            'image': product[4]
+            'image': product[4],
+            'userName': product[5],
+            'profileImage': product[6],
+            'description': product[7],
+            'timestamp': product[8]  # Adiciona o timestamp na resposta
         }
         product_list.append(product_dict)
 
     return jsonify(product_list)
+
+########################################
 
 @app.route('/products/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
@@ -76,6 +86,8 @@ def delete_product(product_id):
 @app.route('/users', methods=['POST'])
 def add_user():
     data = request.get_json()
+    password = data['password']
+    password = generate_password_hash(password, method='pbkdf2:sha256')
     if not data:
         return jsonify({'message': 'No JSON data received'}), 400
 
@@ -85,6 +97,8 @@ def add_user():
 
     if not all([name, phone, password]):
         return jsonify({'message': 'Missing required fields'}), 400
+    
+    password = generate_password_hash(password, method='pbkdf2:sha256')
 
     try:
         with sqlite3.connect('database.db') as conn:
@@ -149,13 +163,13 @@ def login_user():
 
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM User WHERE phone = ? AND password = ?', (phone, password))
+        cursor.execute('SELECT * FROM User WHERE phone = ?', (phone,))
         user = cursor.fetchone()
 
-    if user is None:
+    if user is None or not check_password_hash(user[3], password):
         return jsonify({'message': 'Invalid phone or password'}), 401
 
-    return jsonify({'message': 'Login successful', 'name':user[1]})
+    return jsonify({'message': 'Login successful', 'name': user[1]})
 
 
 

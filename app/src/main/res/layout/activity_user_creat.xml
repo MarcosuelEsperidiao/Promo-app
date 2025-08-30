@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/green"
+    android:background="@drawable/gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user_creat">
+    tools:context=".View.UserCreatActivity">
 
     <TextView
         android:textColor="@color/white"
@@ -42,7 +42,7 @@
         android:layout_below="@id/text_name"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:inputType="number"
+
         android:hint="Celular"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -63,6 +63,15 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/passoword_info"
+        android:layout_below="@id/text_creat_password"
+        android:text="A senha deve ter 6 Digitos"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <Button
