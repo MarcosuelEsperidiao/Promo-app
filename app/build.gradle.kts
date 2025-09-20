@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.play.services.analytics.impl)
 
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
 
     implementation ("com.google.firebase:firebase-auth:22.0.0")
 

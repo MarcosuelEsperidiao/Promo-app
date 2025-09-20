@@ -232,7 +232,7 @@ class AddProductActivity : AppCompatActivity() {
         // Recuperar o nome do usuário e a foto de perfil de SharedPreferences
         val sharedPreferencesUser = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val userName = sharedPreferencesUser.getString("userName", "")
-        val userProfileImageString = sharedPreferencesUser.getString("profileImage", "")
+        val userProfileImageString = sharedPreferencesUser.getString("profileImage", "R.mipmap.profile_image_default_round")
 
         val sharedPreferences = getSharedPreferences("ProductInfo", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -291,7 +291,7 @@ class AddProductActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(
                         this@AddProductActivity,
-                        "Product added successfully",
+                        "Produto adicionado com sucesso",
                         Toast.LENGTH_SHORT
                     ).show()
                     // Navegar para layout_user
@@ -300,7 +300,7 @@ class AddProductActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@AddProductActivity,
-                        "Failed to add product",
+                        "Erro ao adicionar produto",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

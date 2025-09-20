@@ -2,19 +2,21 @@ package com.example.lowprice.View
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Base64
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -27,6 +29,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.lowprice.Model.ApiService.AddProduct_Api
 import com.example.lowprice.Model.Product_Add
@@ -42,7 +45,6 @@ import java.io.ByteArrayOutputStream
 class LayoutUserActivity : AppCompatActivity() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
     private lateinit var scrollView: ScrollView
     private lateinit var imgPerfil: ImageView
     private lateinit var camProfileImage: ImageView
@@ -50,7 +52,6 @@ class LayoutUserActivity : AppCompatActivity() {
     private val REQUEST_IMAGE_PICK = 2
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -61,19 +62,17 @@ class LayoutUserActivity : AppCompatActivity() {
                 this,
                 R.color.navigation_bar_color
             )
-        );
+        )
 
         camProfileImage = findViewById(R.id.cam_profile_image)
         scrollView = findViewById(R.id.scroll_view)
         imgPerfil = findViewById(R.id.img_perfil)
-
 
         val sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
         val userName = sharedPreferences.getString("userName", "")
 
         val textViewName: TextView = findViewById(R.id.t_name)
         textViewName.text = "Olá, ${userName ?: "usuário"}"
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -91,7 +90,6 @@ class LayoutUserActivity : AppCompatActivity() {
         iconAddCircle.setOnClickListener {
             val intent = Intent(this, AddProductActivity::class.java)
             startActivity(intent)
-
         }
 
         val iconHome: ImageView = findViewById(R.id.icon_home)
@@ -101,9 +99,10 @@ class LayoutUserActivity : AppCompatActivity() {
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         swipeRefreshLayout.setOnRefreshListener {
+            // Mostra o esqueleto também no refresh
+            showSkeletonLoading()
             fetchProducts()
         }
-
 
         imgPerfil.setOnClickListener {
             showImagePickerDialog()
@@ -112,11 +111,26 @@ class LayoutUserActivity : AppCompatActivity() {
         // Carregar imagem de perfil salva
         loadProfileImage()
 
+        // Mostra o esqueleto imediatamente para uma resposta mais rápida da UI
+        showSkeletonLoading()
 
-        // Fetch products initially
-        fetchProducts()
+        // Inicia a busca dos dados (que vai substituir o esqueleto depois)
+        // Usa um delay pequeno para garantir que o esqueleto seja mostrado primeiro
+        Handler(Looper.getMainLooper()).postDelayed({
+            fetchProducts()
+        }, 100)
     }
 
+    private fun showSkeletonLoading() {
+        val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
+        productListLayout.removeAllViews() // Limpa qualquer view anterior
+
+        // Adiciona 3 itens de esqueleto para preencher a tela
+        for (i in 0..2) {
+            val skeletonView = layoutInflater.inflate(R.layout.product_item_skeleton, null)
+            productListLayout.addView(skeletonView)
+        }
+    }
 
     private fun showImagePickerDialog() {
         val options = arrayOf("Tirar Foto", "Escolher da Galeria")
@@ -198,8 +212,6 @@ class LayoutUserActivity : AppCompatActivity() {
     }
 
     private fun fetchProducts() {
-
-
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("http://144.22.225.3:5000/") // Altere para o endereço correto do seu servidor
@@ -216,14 +228,15 @@ class LayoutUserActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val productList = response.body() ?: emptyList()
                     addProductsToLayout(productList)
-                    swipeRefreshLayout.isRefreshing = false
                 } else {
                     Toast.makeText(
                         this@LayoutUserActivity,
                         "Failed to load products",
                         Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    ).show()
+                    // Limpa a lista em caso de erro
+                    val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
+                    productListLayout.removeAllViews()
                 }
                 swipeRefreshLayout.isRefreshing = false
             }
@@ -231,13 +244,24 @@ class LayoutUserActivity : AppCompatActivity() {
             override fun onFailure(call: Call<List<Product_Add>>, t: Throwable) {
                 Toast.makeText(this@LayoutUserActivity, "Error: ${t.message}", Toast.LENGTH_SHORT)
                     .show()
+                swipeRefreshLayout.isRefreshing = false
+                // Limpa a lista em caso de erro
+                val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
+                productListLayout.removeAllViews()
             }
         })
     }
 
     private fun addProductsToLayout(productAdds: List<Product_Add>) {
         val productListLayout = findViewById<LinearLayout>(R.id.product_list_layout)
-        productListLayout.removeAllViews()
+        productListLayout.removeAllViews() // Remove os itens de esqueleto
+
+        if (productAdds.isEmpty()) {
+            // Se não há produtos, pode mostrar uma mensagem ou manter a lista vazia
+            val emptyView = layoutInflater.inflate(R.layout.product_item_skeleton, null) // Crie este layout se quiser
+            productListLayout.addView(emptyView)
+            return
+        }
 
         for (product in productAdds) {
             try {
@@ -257,6 +281,7 @@ class LayoutUserActivity : AppCompatActivity() {
                 textPriceDetail.text = "Preço: R$ ${product.price}"
                 textDescription.text = "Descrição: ${product.description}"
                 textTimestamp.text = product.timestamp
+                textUserName.text = product.userName
 
                 // Preço (Style)
                 val priceText = "Preço: R$ ${product.price}"
@@ -333,8 +358,8 @@ class LayoutUserActivity : AppCompatActivity() {
                             val byteArray = Base64.decode(base64String, Base64.DEFAULT)
                             Glide.with(this@LayoutUserActivity)
                                 .load(byteArray)
-                                .placeholder(android.R.drawable.ic_menu_gallery) // ✅ Icone padrão
-                                .error(android.R.drawable.ic_dialog_alert) // ✅ Icone de erro padrão
+                                .placeholder(android.R.drawable.ic_menu_gallery)
+                                .error(android.R.drawable.ic_dialog_alert)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageViewPreview)
                         } catch (e: Exception) {
@@ -348,7 +373,7 @@ class LayoutUserActivity : AppCompatActivity() {
                     imageViewPreview.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
 
-// Para a imagem de perfil
+                // Para a imagem de perfil
                 product.profileImage?.let { base64String ->
                     if (base64String.isNotEmpty()) {
                         try {
@@ -357,7 +382,7 @@ class LayoutUserActivity : AppCompatActivity() {
                                 .load(byteArray)
                                 .transform(CircleCrop())
                                 .placeholder(android.R.drawable.ic_menu_gallery)
-                                .error(android.R.drawable.ic_dialog_alert)
+                                .error(R.drawable.profile_person_24)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageViewProfile)
                         } catch (e: Exception) {

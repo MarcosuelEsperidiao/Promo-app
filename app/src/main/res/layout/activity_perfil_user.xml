@@ -11,7 +11,7 @@
         android:id="@+id/photo_profile"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:background="@drawable/rounded_edittext"
+        android:background="@mipmap/profile_image_default_round"
         android:layout_width="60dp"
         android:layout_height="60dp"/>
 

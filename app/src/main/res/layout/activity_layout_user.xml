@@ -8,28 +8,16 @@
     android:background="#257E45"
     tools:context=".View.LayoutUserActivity">
 
-    <TextView
-        android:id="@+id/text_prices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Promo-App"
-        android:textStyle="bold"
-        android:fontFamily="@font/raleway_medium"
-        android:textColor="@color/black"
-        android:textSize="30sp"/>
-
     <ImageView
         android:id="@+id/img_perfil"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
-        android:layout_below="@id/text_prices"
+
         android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
         android:elevation="20dp"
-        android:src="@drawable/rounded_edittext" />
+        android:src="@mipmap/profile_image_default_round" />
 
     <ImageView
         android:id="@+id/cam_profile_image"
@@ -46,16 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/img_perfil"
-        android:layout_centerHorizontal="true"
+        android:text="Name"
+        android:layout_marginStart="80sp"
+        android:layout_marginTop="7sp"
         android:padding="10dp"
         android:textColor="@color/white"
-        android:textSize="25sp" />
+        android:textSize="17sp" />
 
     <View
         android:id="@+id/text_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/text_prices"
+
         android:layout_marginTop="80dp"
         android:background="#308E52" />
 
